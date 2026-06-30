@@ -1,0 +1,10 @@
+{
+  "name": "backendWpf",
+  "scripts": {
+    "swag": "openapi-generator-cli generate"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.28.0"
+  }
+}

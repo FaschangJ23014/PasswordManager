@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="backend/backend.csproj" />
+  <Project Path="backendWpf/backendWpf.csproj" />
+  <Project Path="PasswordsDb/PasswordsDb.csproj" />
+  <Project Path="Swagger/src/Org.OpenAPITools/Org.OpenAPITools.csproj" />
+</Solution>
