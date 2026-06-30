@@ -42,7 +42,7 @@ AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDir
 Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine($"++++ ConnectionString: {connectionString}");
 Console.ResetColor();
-builder.Services.AddDbContext<PasswordsContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(@"Data Source=C:\Schule\Projekte\PasswordManager\Database\passwords.db"));
 #endregion
 
 var app = builder.Build();
