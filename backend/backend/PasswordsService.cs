@@ -1,6 +1,6 @@
-﻿namespace backend
+﻿namespace backend;
+
+public class PasswordsService
 {
-    public class PasswordsService
-    {
-    }
+
 }
