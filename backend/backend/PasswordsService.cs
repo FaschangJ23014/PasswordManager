@@ -20,5 +20,16 @@ public class PasswordsService
         return entry;
     }
 
+    public List<PasswordEntry> SearchPasswords(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return _context.Passwords.ToList();
+        }
+
+        return _context.Passwords
+            .Where(p => p.Website.ToLower().Contains(query.ToLower()))
+            .ToList();
+    }
 
 }

@@ -1,6 +1,17 @@
 @baseUrl = http://localhost:5000
 ##################################################
 
-##################################################
-GET {{baseUrl}}/Values/Passwords
+
+################################################## Passwords
+GET {{baseUrl}}/api/Passwords
+#####
+POST {{baseUrl}}/api/Passwords
+Content-type: application/json
+
+{
+   "id": 1,
+   "website": "abc",
+   "username": "abc",
+   "encryptedPassword": "abc"
+}
 #####
