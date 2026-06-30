@@ -5,7 +5,6 @@
 //----------------------------------------
 
 using GrueneisR.RestClientGenerator;
-
 using Microsoft.OpenApi;
 
 string corsKey = "_myCorsKey";
@@ -18,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region -------------------------------------------- ConfigureServices
 builder.Services.AddControllers();
+builder.Services.AddScoped<PasswordsService>();
 builder.Services
   .AddEndpointsApiExplorer()
   .AddAuthorization()
