@@ -17,7 +17,6 @@ public class PasswordsController : ControllerBase
 
     private bool IsAuthorized()
     {
-        // Wir schauen, ob im HTTP-Header das Passwort mitgeschickt wurde
         if (Request.Headers.TryGetValue("X-Master-Password", out var submittedPassword))
         {
             return submittedPassword == _masterPassword;
@@ -45,7 +44,23 @@ public class PasswordsController : ControllerBase
     {
         if (!IsAuthorized()) return Unauthorized("Falsches oder fehlendes Master-Passwort!");
 
-        var created = _passwordsService.CreatePassword(newEntry);
-        return Ok(created);
+        try
+        {
+            // Validierungsschutz: Falls JSON-Mapping schiefging
+            if (newEntry == null) return BadRequest("Daten konnten nicht gelesen werden.");
+
+            var created = _passwordsService.CreatePassword(newEntry);
+            return Ok(created);
+        }
+        catch (Exception ex)
+        {
+            // Das schreibt den echten Fehler rot ins dotnet-Terminal!
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"++++ FEHLER BEIM SPEICHERN: {ex.Message}");
+            if (ex.InnerException != null) Console.WriteLine($"++++ INNER: {ex.InnerException.Message}");
+            Console.ResetColor();
+
+            return StatusCode(500, $"Datenbank-Fehler: {ex.Message}");
+        }
     }
 }

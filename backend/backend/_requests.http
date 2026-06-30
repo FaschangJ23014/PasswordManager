@@ -3,7 +3,7 @@
 
 
 ################################################## Passwords
-GET {{baseUrl}}/api/Passwords
+GET {{baseUrl}}/api/Passwords?search=abc
 #####
 POST {{baseUrl}}/api/Passwords
 Content-type: application/json

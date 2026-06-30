@@ -3,7 +3,6 @@ using System.Text;
 
 namespace backend;
 
-
 public class PasswordsService
 {
     private readonly DataContext _context;
@@ -12,18 +11,30 @@ public class PasswordsService
     public PasswordsService(DataContext context, IConfiguration configuration)
     {
         _context = context;
+        // Liest aus: ShieldSettings -> EncryptionKey
         _encryptionKey = configuration["ShieldSettings:EncryptionKey"] ?? "StandardFallbackKey32ZeichenLang!";
+    }
+
+    // HIER DIE NEUE HILFSMETHODE: Zwingt den Key IMMER auf exakt 32 Bytes (256 Bit)
+    private byte[] GetSecureKeyBytes()
+    {
+        byte[] keyBytes = new byte[32]; // AES-256 braucht genau 32 Bytes
+        byte[] secretBytes = Encoding.UTF8.GetBytes(_encryptionKey);
+
+        // Kopiert die Bytes und füllt den Rest mit 0 auf oder schneidet nach 32 Bytes ab
+        Array.Copy(secretBytes, keyBytes, Math.Min(secretBytes.Length, keyBytes.Length));
+        return keyBytes;
     }
 
     public List<PasswordEntry> GetAllPasswords()
     {
         var entries = _context.Passwords.ToList();
-        
+
         foreach (var entry in entries)
         {
             entry.EncryptedPassword = Decrypt(entry.EncryptedPassword);
         }
-        
+
         return entries;
     }
 
@@ -34,7 +45,6 @@ public class PasswordsService
         _context.Passwords.Add(entry);
         _context.SaveChanges();
 
-        
         entry.EncryptedPassword = Decrypt(entry.EncryptedPassword);
         return entry;
     }
@@ -64,8 +74,8 @@ public class PasswordsService
         if (string.IsNullOrEmpty(plainText)) return plainText;
 
         using Aes aes = Aes.Create();
-        aes.Key = Encoding.UTF8.GetBytes(_encryptionKey);
-        aes.IV = new byte[16]; // Vereinfacht für das Schulprojekt: Fester Initialisierungsvektor
+        aes.Key = GetSecureKeyBytes(); // <-- Nutzt jetzt die sichere 32-Byte Methode!
+        aes.IV = new byte[16];
 
         using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
         using var ms = new MemoryStream();
@@ -87,14 +97,14 @@ public class PasswordsService
         try
         {
             using Aes aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_encryptionKey);
+            aes.Key = GetSecureKeyBytes(); // <-- Nutzt jetzt die sichere 32-Byte Methode!
             aes.IV = new byte[16];
 
             using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
             using var ms = new MemoryStream(Convert.FromBase64String(cipherText));
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
             using var sr = new StreamReader(cs);
-            
+
             return sr.ReadToEnd();
         }
         catch
@@ -102,5 +112,4 @@ public class PasswordsService
             return "[FEHLER BEIM ENTSCHLÜSSELN]";
         }
     }
-
 }

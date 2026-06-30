@@ -5,5 +5,8 @@
 *.user
 *.suo
 
-# Die SQLite-Datenbank selbst (wollen wir meist nicht im Code-Repo)
+
 Database/passwords.db
+
+
+appsettings.json 
