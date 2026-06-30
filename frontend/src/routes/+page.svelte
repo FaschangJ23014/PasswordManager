@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  // Svelte 5 Runes für Reaktivität + Typisierung fixen
+  // Svelte 5 Runes für Reaktivität
   let masterPassword = $state('');
   let isAuthenticated = $state(false);
   let searchQuery = $state('');
@@ -13,9 +13,9 @@
   let newUsername = $state('');
   let generatedPassword = $state('');
 
-  const API_URL = 'http://localhost:5000/api/passwords'; // Passe den Port an dein Backend an!
+  const API_URL = 'http://localhost:5000/api/passwords';
 
-  // 1. Passwörter von der API laden (mit Suche & Master-Passwort Header)
+  // 1. Passwörter von der API laden
   async function loadPasswords() {
     if (!masterPassword) return;
     
@@ -36,11 +36,10 @@
       }
     } catch (error) {
       console.error('Fehler beim Laden:', error);
-      alert('Backend nicht erreichbar. Läuft dein dotnet run?');
     }
   }
 
-  // 2. Neues Passwort generieren (Zufalls-Monster)
+  // 2. Neues Passwort generieren
   function generateSecurePassword() {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~}{[]:;?><";
     let password = "";
@@ -56,9 +55,10 @@
       alert('Bitte alle Felder ausfüllen!');
       return;
     }
+
     const newEntry = {
       website: newWebsite,
-      username: newUsername,        
+      username: newUsername,
       encryptedPassword: generatedPassword  
     };
 
@@ -87,10 +87,33 @@
     }
   }
 
-  // 4. In die Zwischenablage kopieren (Clipboard API)
+  // 4. In die Zwischenablage kopieren
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text);
     alert('Passwort in die Zwischenablage kopiert! 📋');
+  }
+
+  // 5. NEU: Eintrag aus der Datenbank löschen
+  async function deletePassword(id) {
+    if (!confirm('Willst du dieses Passwort wirklich für immer löschen?')) return;
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'X-Master-Password': masterPassword
+        }
+      });
+
+      if (response.ok) {
+        loadPasswords(); // Liste sofort neu laden, damit der Eintrag verschwindet!
+      } else {
+        const errorText = await response.text();
+        alert('Fehler beim Löschen: ' + errorText);
+      }
+    } catch (error) {
+      console.error('Fehler beim Löschen:', error);
+    }
   }
 </script>
 
@@ -141,12 +164,19 @@
             {#each passwords as entry}
               <div class="entry-item">
                 <div class="entry-info">
-                  <strong>{entry.website}</strong>
-                  <span>{entry.username}</span>
+                  <strong>{entry.Website || entry.website}</strong>
+                  <span>{entry.Username || entry.username}</span>
                 </div>
-                <button onclick={() => copyToClipboard(entry.encryptedPassword)}>
-                  Kopieren 📋
-                </button>
+                
+                <div class="action-buttons">
+                  <button class="btn-copy" onclick={() => copyToClipboard(entry.EncryptedPassword || entry.encryptedPassword)}>
+                    📋
+                  </button>
+                  <button class="btn-delete" onclick={() => deletePassword(entry.Id || entry.id)}>
+                    🗑️
+                  </button>
+                </div>
+
               </div>
             {/each}
           </div>
@@ -158,7 +188,6 @@
 </main>
 
 <style>
-  /* Ein bisschen cleanes, modernes Styling */
   :global(body) {
     background-color: #0f172a;
     color: #f8fafc;
@@ -197,7 +226,6 @@
     box-sizing: border-box;
   }
   button {
-    width: 100%;
     padding: 12px;
     background: #38bdf8;
     color: #0f172a;
@@ -208,10 +236,12 @@
     transition: 0.2s;
   }
   button:hover { background: #0ea5e9; }
-  .btn-sec { background: #64748b; color: white; width: auto; }
-  .btn-success { background: #10b981; color: white; margin-top: 15px; }
+  .btn-sec { background: #64748b; color: white; }
+  .btn-success { width: 100%; background: #10b981; color: white; margin-top: 15px; }
   .generator-group { display: flex; gap: 10px; align-items: center; }
+  .generator-group input { flex-grow: 1; }
   .password-list { margin-top: 15px; }
+  
   .entry-item {
     display: flex;
     justify-content: space-between;
@@ -223,5 +253,25 @@
   }
   .entry-info { display: flex; flex-direction: column; }
   .entry-info span { font-size: 0.85rem; color: #94a3b8; }
-  .entry-item button { width: auto; padding: 6px 12px; font-size: 0.9rem; }
+  
+  /* Styling für die Action Buttons */
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  .action-buttons button {
+    padding: 8px 12px;
+    font-size: 1rem;
+  }
+  .btn-copy {
+    background: #38bdf8;
+    color: #0f172a;
+  }
+  .btn-delete {
+    background: #ef4444;
+    color: white;
+  }
+  .btn-delete:hover {
+    background: #dc2626;
+  }
 </style>

@@ -3,6 +3,8 @@
 
 
 ################################################## Passwords
+DELETE {{baseUrl}}/api/Passwords/1
+#####
 GET {{baseUrl}}/api/Passwords?search=abc
 #####
 POST {{baseUrl}}/api/Passwords

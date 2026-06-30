@@ -46,7 +46,6 @@ public class PasswordsController : ControllerBase
 
         try
         {
-            // Validierungsschutz: Falls JSON-Mapping schiefging
             if (newEntry == null) return BadRequest("Daten konnten nicht gelesen werden.");
 
             var created = _passwordsService.CreatePassword(newEntry);
@@ -54,13 +53,28 @@ public class PasswordsController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Das schreibt den echten Fehler rot ins dotnet-Terminal!
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"++++ FEHLER BEIM SPEICHERN: {ex.Message}");
             if (ex.InnerException != null) Console.WriteLine($"++++ INNER: {ex.InnerException.Message}");
             Console.ResetColor();
 
             return StatusCode(500, $"Datenbank-Fehler: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult Delete(int id)
+    {
+        if (!IsAuthorized()) return Unauthorized("Falsches oder fehlendes Master-Passwort!");
+
+        try
+        {
+            _passwordsService.Delete(id);
+            return Ok("Eintrag erfolgreich gelöscht. 🗑️");
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
         }
     }
 }

@@ -68,6 +68,20 @@ public class PasswordsService
         return filtered;
     }
 
+    public void Delete(int id)
+    {
+        var password = _context.Passwords.FirstOrDefault(x =>  x.Id == id);
+
+        if(password == null)
+        {
+            throw new Exception("Object not found");
+        }
+
+        _context.Passwords.Remove(password);
+        _context.SaveChanges();
+
+    }
+
     // --- AES VERSCHLÜSSELUNG LOGIK ---
     private string Encrypt(string plainText)
     {
