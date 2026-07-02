@@ -1,0 +1,10 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "dotnet publish backend/backend.csproj -c Release -o out"
+
+[deploy]
+startCommand = "dotnet out/backend.dll"
+
+[nixpacks]
+providers = ["csharp"]
+pkgs = ["dotnet-sdk"]
