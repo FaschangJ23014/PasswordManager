@@ -13,7 +13,7 @@
   let newUsername = $state('');
   let generatedPassword = $state('');
 
-  const API_URL = 'http://localhost:5000/api/passwords';
+  const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
 
   // 1. Passwörter von der API laden
   async function loadPasswords() {
