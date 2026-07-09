@@ -31,14 +31,15 @@ builder.Services
     swaggerVersion,
     new OpenApiInfo { Title = swaggerTitle, Version = swaggerVersion }
   ))
-  // HIER ist die originale HTL-CORS-Policy, die absolut ALLES erlaubt (auch dein Svelte auf Port 5173!)
-  .AddCors(options => options.AddPolicy(
-    corsKey,
-    x => x.SetIsOriginAllowed(_ => true)
-          .AllowAnyMethod()
-          .AllowAnyHeader()
-          .AllowCredentials()
-  ))
+// HIER ist die originale HTL-CORS-Policy, die absolut ALLES erlaubt (auch dein Svelte auf Port 5173!)
+.AddCors(options => options.AddPolicy(
+  corsKey,
+  x => x.WithOrigins("https://password-manager-sigma-lemon.vercel.app") 
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+))
+
   .AddRestClientGenerator(options => options
     .SetFolder(restClientFolder)
     .SetFilename(restClientFilename)
@@ -54,8 +55,8 @@ Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine($"++++ ConnectionString: {connectionString}");
 Console.ResetColor();
 
-builder.Services.AddDbContext<DataContext>(options => 
-    options.UseSqlite(@"Data Source=C:\Schule\Projekte\PasswordManager\Database\passwords.db"));
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlite($"Data Source={System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "passwords.db")}"));
 
 #endregion
 
