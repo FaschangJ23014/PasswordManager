@@ -13,6 +13,9 @@
   let newUsername = $state('');
   let generatedPassword = $state('');
 
+  //Für die Automatische Berechnung: Reaktiv
+  let strength = $derived(calculateStrength(generatedPassword));
+
   const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
 
   // 1. Passwörter von der API laden
@@ -118,10 +121,19 @@
       console.error('Fehler beim Löschen:', error);
     }
   }
+
+  function calculateStrength(pwd){
+    let score = 0;
+    if (pwd.length > 12) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    return score;
+  }
 </script>
 
 <main class="container">
-  <h1>🛡️ ShieldVault Password Manager</h1>
+  <h1>🛡️ ShieldVault</h1>
 
   {#if !isAuthenticated}
     <div class="card login-box">
@@ -131,7 +143,7 @@
         placeholder="Dein Master-Passwort eingeben..." 
         bind:value={masterPassword} 
       />
-      <button onclick={loadPasswords}>Tresor öffnen 🔓</button>
+      <button onclick={loadPasswords}>Tresor öffnen</button>
     </div>
   {:else}
     
@@ -147,6 +159,11 @@
           <button class="btn-sec" onclick={generateSecurePassword}>Generieren ⚡</button>
         </div>
         
+        <div class="strength-meter">
+              <div class="bar" style="width: {strength * 25}%; background-color: {['#ef4444', '#f59e0b', '#fbbf24', '#10b981', '#10b981'][strength]};"></div>
+        </div>
+        <small style="color: #94a3b8; font-size: 0.75rem;"> Stärke: {['Sehr schwach', 'Schwach', 'Mittel', 'Sicher', 'Sehr sicher'][strength]}</small>
+
         <button class="btn-success" onclick={savePassword}>Ab in die SQLite-DB 💾</button>
       </div>
 
@@ -191,6 +208,20 @@
 </main>
 
 <style>
+.strength-meter {
+  height: 6px;
+  width: 100%;
+  background: #334155; /* Hintergrund des Balkens */
+  border-radius: 3px;
+  margin: 8px 0 4px 0;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
   :global(body) {
     background-color: #0f172a;
     color: #f8fafc;
@@ -277,4 +308,5 @@
   .btn-delete:hover {
     background: #dc2626;
   }
+  
 </style>
