@@ -137,7 +137,7 @@
     
     // Daten hinzufügen
     passwords.forEach(p => {
-        csvContent += `${p.website},${p.username},${p.encryptedPassword}\n`;
+        csvContent += `${p.website},${p.username},${p.EncryptedPassword}\n`;
     });
 
     // Download-Logik
