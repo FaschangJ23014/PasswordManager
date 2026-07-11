@@ -56,7 +56,7 @@ Console.WriteLine($"++++ ConnectionString: {connectionString}");
 Console.ResetColor();
 
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlite($"Data Source={System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "passwords.db")}"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Passwords")));
 
 #endregion
 
@@ -85,4 +85,21 @@ app.Map("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 Console.WriteLine($"Ready for clients at {DateTime.Now:HH:mm:ss} ...");
+// Automatische Migration / Tabellenerstellung für PostgreSQL
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<DataContext>();
+        context.Database.EnsureCreated(); // Erstellt die Tabellen live in Supabase
+        Console.WriteLine("++++ Database migration/creation successful!");
+    }
+    catch (Exception ex)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"++++ Database migration failed: {ex.Message}");
+        Console.ResetColor();
+    }
+}
 app.Run();
