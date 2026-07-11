@@ -110,8 +110,15 @@ public class PasswordsService
 
         try
         {
+            // 1. Prüfen, ob es überhaupt valides Base64 sein kann
+            Span<byte> buffer = new Span<byte>(new byte[cipherText.Length]);
+            if (!Convert.TryFromBase64String(cipherText, buffer, out int bytesWritten))
+            {
+                return "[Unverschlüsselter Alt-Eintrag]";
+            }
+
             using Aes aes = Aes.Create();
-            aes.Key = GetSecureKeyBytes(); // <-- Nutzt jetzt die sichere 32-Byte Methode!
+            aes.Key = GetSecureKeyBytes();
             aes.IV = new byte[16];
 
             using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
@@ -119,11 +126,14 @@ public class PasswordsService
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
             using var sr = new StreamReader(cs);
 
+            // Das Auslesen MUSS mit im Try-Block stehen, da Krypto-Fehler erst hier geworfen werden!
             return sr.ReadToEnd();
         }
-        catch
+        catch (Exception ex)
         {
-            return "[FEHLER BEIM ENTSCHLÜSSELN]";
+            // Logge den Fehler auf Render, damit wir ihn sehen, aber stürze nicht ab!
+            Console.WriteLine($"++++ Krypto-Fehler bei Eintrag: {ex.Message}");
+            return "[Entschlüsselung fehlgeschlagen - Falscher Key/Format]";
         }
     }
 }
