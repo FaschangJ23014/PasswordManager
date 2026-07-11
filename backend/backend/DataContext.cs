@@ -11,7 +11,14 @@ public class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<PasswordEntry>()
-            .ToTable("passwords");
+        // Zwingt die Tabelle auf den Namen "passwords" im public-Schema
+        var entity = modelBuilder.Entity<PasswordEntry>();
+        entity.ToTable("passwords", schema: "public");
+
+        // Zwingt alle Spaltennamen auf exakte Kleinbuchstaben, damit Postgres sie findet!
+        entity.Property(p => p.Id).HasColumnName("id");
+        entity.Property(p => p.Website).HasColumnName("website");
+        entity.Property(p => p.Username).HasColumnName("username");
+        entity.Property(p => p.EncryptedPassword).HasColumnName("encryptedpassword");
     }
 }

@@ -93,15 +93,28 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<DataContext>();
 
+        // 1. Stellt sicher, dass die DB existiert
         context.Database.EnsureCreated();
 
-        Console.WriteLine("++++ Database migration/creation successful!");
+        // 2. Erstellt die Tabelle manuell per SQL, falls Supabase sie noch nicht hat
+        string createTableSql = @"
+            CREATE TABLE IF NOT EXISTS public.passwords (
+                ""Id"" SERIAL PRIMARY KEY,
+                ""Website"" TEXT NOT NULL,
+                ""Username"" TEXT NOT NULL,
+                ""EncryptedPassword"" TEXT NOT NULL
+            );";
+
+        using var command = context.Database.GetDbConnection().CreateCommand();
+        command.CommandText = createTableSql;
+        context.Database.OpenConnection();
+        command.ExecuteNonQuery();
+
+        Console.WriteLine("++++ Tabelle public.passwords erfolgreich geprüft/erstellt!");
     }
     catch (Exception ex)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"++++ Database migration failed: {ex.Message}");
-        Console.ResetColor();
+        Console.WriteLine($"++++ Fehler bei automatischer Tabellenerstellung: {ex.Message}");
     }
 }
 app.Run();
