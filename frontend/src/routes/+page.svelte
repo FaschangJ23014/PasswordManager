@@ -42,6 +42,7 @@
     } catch (error) {
       console.error('Fehler beim Laden:', error);
     }
+    console.log("Meine Passwörter:", passwords);
   }
 
   // 2. Neues Passwort generieren
@@ -137,7 +138,7 @@
     
     // Daten hinzufügen
     passwords.forEach(p => {
-        csvContent += `${p.website},${p.username},${p.EncryptedPassword}\n`;
+        csvContent += `${p.website},${p.username},${p.encryptedPassword}\n`;
     });
 
     // Download-Logik
