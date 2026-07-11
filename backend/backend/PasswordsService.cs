@@ -131,7 +131,6 @@ public class PasswordsService
         }
         catch (Exception ex)
         {
-            // Logge den Fehler auf Render, damit wir ihn sehen, aber stürze nicht ab!
             Console.WriteLine($"++++ Krypto-Fehler bei Eintrag: {ex.Message}");
             return "[Entschlüsselung fehlgeschlagen - Falscher Key/Format]";
         }
