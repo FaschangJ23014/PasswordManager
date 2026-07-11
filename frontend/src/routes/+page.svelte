@@ -130,6 +130,26 @@
     if (/[^A-Za-z0-9]/.test(pwd)) score++;
     return score;
   }
+
+  function exportPasswords() {
+    // Header der CSV
+    let csvContent = "data:text/csv;charset=utf-8,Website,Username,Password\n";
+    
+    // Daten hinzufügen
+    passwords.forEach(p => {
+        csvContent += `${p.website},${p.username},${p.encryptedPassword}\n`;
+    });
+
+    // Download-Logik
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_vault_export.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 </script>
 
 <main class="container">
@@ -201,6 +221,7 @@
             {/each}
           </div>
         {/if}
+        <button class="btn-export" onclick={exportPasswords}>Export CSV</button>
       </div>
 
     </div>
@@ -208,6 +229,22 @@
 </main>
 
 <style>
+.btn-export {
+  background-color: #3b82f6; /* Ein schönes Blau */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.btn-export:hover {
+  background-color: #2563eb; /* Dunkler beim Drüberfahren */
+}
+
 .strength-meter {
   height: 6px;
   width: 100%;
