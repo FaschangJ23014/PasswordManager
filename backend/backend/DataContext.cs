@@ -12,6 +12,6 @@ public class DataContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<PasswordEntry>()
-            .ToTable("Passwords");
+            .ToTable("passwords");
     }
 }

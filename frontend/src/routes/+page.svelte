@@ -16,6 +16,7 @@
   const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
 
   // 1. Passwörter von der API laden
+  // 1. Passwörter von der API laden (KORRIGIERT)
   async function loadPasswords() {
     if (!masterPassword) return;
     
@@ -23,7 +24,8 @@
       const response = await fetch(`${API_URL}?search=${searchQuery}`, {
         method: 'GET',
         headers: {
-          'X-Master-Password': masterPassword
+          // encodeURIComponent macht das Passwort Header-sicher!
+          'X-Master-Password': encodeURIComponent(masterPassword)
         }
       });
 
@@ -67,7 +69,8 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Master-Password': masterPassword
+          // Auch hier absichern:
+          'X-Master-Password': encodeURIComponent(masterPassword)
         },
         body: JSON.stringify(newEntry)
       });

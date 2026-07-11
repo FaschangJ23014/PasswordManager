@@ -93,7 +93,6 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<DataContext>();
 
-        // NUR EnsureCreated drin lassen!
         context.Database.EnsureCreated();
 
         Console.WriteLine("++++ Database migration/creation successful!");

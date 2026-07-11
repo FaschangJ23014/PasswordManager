@@ -19,7 +19,10 @@ public class PasswordsController : ControllerBase
     {
         if (Request.Headers.TryGetValue("X-Master-Password", out var submittedPassword))
         {
-            return submittedPassword == _masterPassword;
+            // System.Uri.UnescapeDataString macht aus %21 wieder ein ! bzw. decodiert Emojis/Sonderzeichen
+            string decodedPassword = System.Uri.UnescapeDataString(submittedPassword.ToString());
+
+            return decodedPassword == _masterPassword;
         }
         return false;
     }
