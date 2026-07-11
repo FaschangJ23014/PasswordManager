@@ -19,10 +19,20 @@ public class PasswordsController : ControllerBase
     {
         if (Request.Headers.TryGetValue("X-Master-Password", out var submittedPassword))
         {
-            // System.Uri.UnescapeDataString macht aus %21 wieder ein ! bzw. decodiert Emojis/Sonderzeichen
-            string decodedPassword = System.Uri.UnescapeDataString(submittedPassword.ToString());
+            string rawHeader = submittedPassword.ToString();
+            if (string.IsNullOrEmpty(rawHeader)) return false;
 
-            return decodedPassword == _masterPassword;
+            try
+            {
+                // WebUtility.UrlDecode ist wesentlich toleranter als Uri.UnescapeDataString
+                string decodedPassword = System.Net.WebUtility.UrlDecode(rawHeader);
+                return decodedPassword == _masterPassword;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"++++ Fehler beim Decodieren des Headers: {ex.Message}");
+                return false; // Bei Fehlern sicherheitshalber unautorisiert abweisen statt HTTP 500
+            }
         }
         return false;
     }
