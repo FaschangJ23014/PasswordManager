@@ -92,7 +92,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<DataContext>();
-        context.Database.EnsureCreated(); // Erstellt die Tabellen live in Supabase
+
+        // FÜR DIESEN DEPLOY: Vorher alles löschen, um die Tabellen mit dem korrekten Namen neu zu erzwingen
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+
         Console.WriteLine("++++ Database migration/creation successful!");
     }
     catch (Exception ex)
