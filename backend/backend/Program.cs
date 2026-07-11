@@ -93,8 +93,7 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<DataContext>();
 
-        // FÜR DIESEN DEPLOY: Vorher alles löschen, um die Tabellen mit dem korrekten Namen neu zu erzwingen
-        context.Database.EnsureDeleted();
+        // NUR EnsureCreated drin lassen!
         context.Database.EnsureCreated();
 
         Console.WriteLine("++++ Database migration/creation successful!");
