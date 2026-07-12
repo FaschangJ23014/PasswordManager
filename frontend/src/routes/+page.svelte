@@ -243,7 +243,6 @@ async function isPasswordPwned(password) {
       <div class="card list-box">
   <h3>Deine Passwörter</h3>
   <input type="text" placeholder="🔍 Nach Website suchen..." bind:value={searchQuery} oninput={handleSearch} />
-  <button onclick={checkAllPasswords}>Alle auf Leaks prüfen 🔍</button>
 
   {#if passwords.length === 0}
     <p class="empty-msg">Keine Einträge gefunden.</p>
