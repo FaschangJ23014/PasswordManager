@@ -5,6 +5,7 @@
   let masterPassword = $state('');
   let isAuthenticated = $state(false);
   let searchQuery = $state('');
+  let debounceTimer;
   /** @type {any[]} */
   let passwords = $state([]);
 
@@ -156,6 +157,13 @@
     return score;
   }
 
+  function handleSearch() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      loadPasswords();
+    }, 500);
+  }
+
   function exportPasswords() {
     // Header der CSV
     let csvContent = "data:text/csv;charset=utf-8,Website,Username,Password\n";
@@ -229,12 +237,12 @@ async function isPasswordPwned(password) {
         </div>
         <small style="color: #94a3b8; font-size: 0.75rem;"> Stärke: {['Sehr schwach', 'Schwach', 'Mittel', 'Sicher', 'Sehr sicher'][strength]}</small>
 
-        <button class="btn-success" onclick={savePassword}>Ab in die SQLite-DB 💾</button>
+        <button class="btn-success" onclick={savePassword}>Speichern</button>
       </div>
 
       <div class="card list-box">
   <h3>Deine Passwörter</h3>
-  <input type="text" placeholder="🔍 Nach Website suchen..." bind:value={searchQuery} oninput={loadPasswords} />
+  <input type="text" placeholder="🔍 Nach Website suchen..." bind:value={searchQuery} oninput={handleSearch} />
   <button onclick={checkAllPasswords}>Alle auf Leaks prüfen 🔍</button>
 
   {#if passwords.length === 0}
@@ -258,7 +266,10 @@ async function isPasswordPwned(password) {
       {/each}
     </div>
   {/if}
-    <button class="btn-export" onclick={exportPasswords}>Export CSV</button>
+    <div class="button-group">
+        <button class="btn-export" onclick={exportPasswords}>Export CSV</button>
+        <button class="btn-export" onclick={checkAllPasswords}>Leaks prüfen 🔍</button>
+    </div>
     </div>
 
     </div>
@@ -266,6 +277,11 @@ async function isPasswordPwned(password) {
 </main>
 
 <style>
+.button-group {
+  display: flex;
+  gap: 10px; /* Abstand zwischen den Buttons */
+  margin-top: 10px;
+}
 .pwned { 
   border: 2px 
   solid #ef4444; 
