@@ -7,6 +7,9 @@
   let searchQuery = $state('');
   /** @type {any[]} */
   let passwords = $state([]);
+
+  /** @type {any[]} */
+  let pwnedList = $state([]);
   
   // Für das neue Passwort-Formular
   let newWebsite = $state('');
@@ -62,6 +65,13 @@
       return;
     }
 
+    // Prüfung VOR dem Speichern
+    const isPwned = await isPasswordPwned(generatedPassword);
+    if (isPwned) {
+        const confirmSave = confirm("WARNUNG: Dieses Passwort wurde in einem Leak gefunden! Trotzdem speichern?");
+        if (!confirmSave) return;
+    }
+
     const newEntry = {
       website: newWebsite,
       username: newUsername,
@@ -92,6 +102,20 @@
     } catch (error) {
       console.error('Fehler beim Speichern:', error);
     }
+  }
+
+  async function checkAllPasswords() {
+    pwnedList = []; 
+    for (const p of passwords) {
+        // Achtung: Da dein Backend beim 'GET' entschlüsselt, ist 'entry.EncryptedPassword' 
+        // hier das Klartext-Passwort!
+        const pwd = p.EncryptedPassword || p.encryptedPassword;
+        if (await isPasswordPwned(pwd)) {
+            pwnedList.push(p.Id || p.id);
+        }
+    }
+    if (pwnedList.length > 0) alert(`Gefahr! ${pwnedList.length} Passwörter sind in Leaks gefunden worden.`);
+    else alert("Alles sicher! Keine Leaks gefunden.");
   }
 
   // 4. In die Zwischenablage kopieren
@@ -151,6 +175,26 @@
     document.body.removeChild(link);
 }
 
+//HIBP-Funktion
+async function isPasswordPwned(password) {
+    // 1. SHA-1 Hash erzeugen
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+    // 2. Range-Suche (nur die ersten 5 Zeichen)
+    const prefix = hashHex.substring(0, 5);
+    const suffix = hashHex.substring(5);
+
+    const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+    const text = await response.text();
+
+    // 3. Prüfen, ob der restliche Teil (Suffix) in der Antwort enthalten ist
+    return text.includes(suffix);
+}
+
 </script>
 
 <main class="container">
@@ -189,47 +233,45 @@
       </div>
 
       <div class="card list-box">
-        <h3>Deine Passwörter</h3>
-        
-        <input 
-          type="text" 
-          placeholder="🔍 Nach Website suchen..." 
-          bind:value={searchQuery} 
-          oninput={loadPasswords} 
-        />
+  <h3>Deine Passwörter</h3>
+  <input type="text" placeholder="🔍 Nach Website suchen..." bind:value={searchQuery} oninput={loadPasswords} />
+  <button onclick={checkAllPasswords}>Alle auf Leaks prüfen 🔍</button>
 
-        {#if passwords.length === 0}
-          <p class="empty-msg">Keine Einträge gefunden.</p>
-        {:else}
-          <div class="password-list">
-            {#each passwords as entry}
-              <div class="entry-item">
-                <div class="entry-info">
-                  <strong>{entry.Website || entry.website}</strong>
-                  <span>{entry.Username || entry.username}</span>
-                </div>
-                
-                <div class="action-buttons">
-                  <button class="btn-copy" onclick={() => copyToClipboard(entry.EncryptedPassword || entry.encryptedPassword)}>
-                    📋
-                  </button>
-                  <button class="btn-delete" onclick={() => deletePassword(entry.Id || entry.id)}>
-                    🗑️
-                  </button>
-                </div>
-
-              </div>
-            {/each}
+  {#if passwords.length === 0}
+    <p class="empty-msg">Keine Einträge gefunden.</p>
+  {:else}
+    <div class="password-list">
+      {#each passwords as entry}
+        <div class="entry-item" class:pwned={pwnedList.includes(entry.id ?? entry.Id)}>
+          <div class="entry-info">
+            <strong>{entry.website ?? entry.Website}</strong>
+            {#if pwnedList.includes(entry.id ?? entry.Id)}
+              <span style="color: #ef4444; font-size: 0.7rem;">⚠️ LEAK GEFUNDEN!</span>
+            {/if}
           </div>
-        {/if}
-        <button class="btn-export" onclick={exportPasswords}>Export CSV</button>
-      </div>
+          
+          <div class="action-buttons">
+            <button class="btn-copy" onclick={() => copyToClipboard(entry.encryptedPassword ?? entry.EncryptedPassword)}>📋</button>
+            <button class="btn-delete" onclick={() => deletePassword(entry.id ?? entry.Id)}>🗑️</button>
+          </div>
+        </div>
+      {/each}
+    </div>
+  {/if}
+    <button class="btn-export" onclick={exportPasswords}>Export CSV</button>
+    </div>
 
     </div>
   {/if}
 </main>
 
 <style>
+.pwned { 
+  border: 2px 
+  solid #ef4444; 
+  background: #450a0a !important;
+ }
+
 .btn-export {
   background-color: #3b82f6; /* Ein schönes Blau */
   color: white;
