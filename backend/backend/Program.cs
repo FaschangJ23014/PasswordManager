@@ -14,7 +14,15 @@ string swaggerTitle = "backend";
 string restClientFolder = Environment.CurrentDirectory;
 string restClientFilename = "_requests.http";
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    // Hier fügen wir die Einstellung hinzu, um das File Watching zu deaktivieren
+});
+
+// Füge dies hinzu, um das Problem mit dem FileSystemWatcher zu lösen:
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false);
 
 #region -------------------------------------------- ConfigureServices
 builder.Services.AddControllers()
