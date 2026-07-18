@@ -17,19 +17,11 @@ string restClientFilename = "_requests.http";
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
-    ContentRootPath = Directory.GetCurrentDirectory()
+    ContentRootPath = AppContext.BaseDirectory
 });
 
 builder.Configuration.Sources.Clear();
-
-
-string basePath = Directory.GetCurrentDirectory();
-builder.Configuration.SetBasePath(basePath);
-
-builder.Configuration
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
-    .AddEnvironmentVariables();
+builder.Configuration.AddEnvironmentVariables();
 
 #region -------------------------------------------- ConfigureServices
 builder.Services.AddControllers()
