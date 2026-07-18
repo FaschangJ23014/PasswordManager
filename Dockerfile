@@ -14,8 +14,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-COPY --from=build /src/backend/backend/appsettings.json .
-
 # Port für Render öffnen
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
