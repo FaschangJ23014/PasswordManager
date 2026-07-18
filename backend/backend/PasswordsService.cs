@@ -126,7 +126,6 @@ public class PasswordsService
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
             using var sr = new StreamReader(cs);
 
-            // Das Auslesen MUSS mit im Try-Block stehen, da Krypto-Fehler erst hier geworfen werden!
             return sr.ReadToEnd();
         }
         catch (Exception ex)

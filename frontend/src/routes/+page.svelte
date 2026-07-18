@@ -23,7 +23,6 @@
   const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
 
   // 1. Passwörter von der API laden
-  // 1. Passwörter von der API laden (KORRIGIERT)
   async function loadPasswords() {
     if (!masterPassword) return;
     
@@ -108,8 +107,6 @@
   async function checkAllPasswords() {
     pwnedList = []; 
     for (const p of passwords) {
-        // Achtung: Da dein Backend beim 'GET' entschlüsselt, ist 'entry.EncryptedPassword' 
-        // hier das Klartext-Passwort!
         const pwd = p.EncryptedPassword || p.encryptedPassword;
         if (await isPasswordPwned(pwd)) {
             pwnedList.push(p.Id || p.id);

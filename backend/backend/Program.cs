@@ -49,7 +49,6 @@ builder.Services
 builder.Services.AddLogging(x => x.AddCustomFormatter());
 
 string? connectionString = builder.Configuration.GetConnectionString("Passwords")!;
-AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
 
 Console.ForegroundColor = ConsoleColor.Cyan;
 Console.WriteLine($"++++ ConnectionString: {connectionString}");
@@ -99,10 +98,10 @@ using (var scope = app.Services.CreateScope())
         // 2. Erstellt die Tabelle manuell per SQL, falls Supabase sie noch nicht hat
         string createTableSql = @"
             CREATE TABLE IF NOT EXISTS public.passwords (
-                ""Id"" SERIAL PRIMARY KEY,
-                ""Website"" TEXT NOT NULL,
-                ""Username"" TEXT NOT NULL,
-                ""EncryptedPassword"" TEXT NOT NULL
+                id SERIAL PRIMARY KEY,
+                website TEXT NOT NULL,
+                username TEXT NOT NULL,
+                encryptedpassword TEXT NOT NULL
             );";
 
         using var command = context.Database.GetDbConnection().CreateCommand();

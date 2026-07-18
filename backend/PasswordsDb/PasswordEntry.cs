@@ -15,4 +15,9 @@ public class PasswordEntry
     public string Website { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
     public string EncryptedPassword { get; set; } = string.Empty;
+
+    //Foreign Key
+    public int UserId { get; set; }
+    [ForeignKey(nameof(UserId))]
+    public Users User { get; set; } = null!;
 }
