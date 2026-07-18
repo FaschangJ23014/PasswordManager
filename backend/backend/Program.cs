@@ -16,13 +16,19 @@ string restClientFilename = "_requests.http";
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
-    Args = args,
-    // Hier fügen wir die Einstellung hinzu, um das File Watching zu deaktivieren
+    Args = args
 });
 
-// Füge dies hinzu, um das Problem mit dem FileSystemWatcher zu lösen:
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
-builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false);
+// WICHTIG: Das hier ist der entscheidende Schritt!
+// Wir löschen alle vom Builder automatisch hinzugefügten Konfigurationsquellen, 
+// die standardmäßig "reloadOnChange: true" haben könnten.
+builder.Configuration.Sources.Clear();
+
+// Jetzt fügen wir sie manuell hinzu, garantiert ohne File-Watching:
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
+    .AddEnvironmentVariables(); // WICHTIG für Render, damit die Connection String Variable gelesen wird!
 
 #region -------------------------------------------- ConfigureServices
 builder.Services.AddControllers()
