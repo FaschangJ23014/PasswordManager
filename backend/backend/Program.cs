@@ -3,10 +3,13 @@
 //           v10.2.2 from 2026-04-13
 //   (C)Robert Grueneis/HTL Grieskirchen 
 //----------------------------------------
-using GrueneisR.RestClientGenerator;
-using Microsoft.OpenApi;
 using backend; // Stell sicher, dass dein Namespace hier stimmt!
+using GrueneisR.RestClientGenerator;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Text;
 
 string corsKey = "_myCorsKey";
 string swaggerVersion = "v1";
@@ -23,6 +26,20 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 builder.Configuration.Sources.Clear();
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]!)),
+            ValidateIssuer = false, //Bei Entwicklung auf false
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 #region -------------------------------------------- ConfigureServices
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -30,6 +47,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 builder.Services.AddScoped<PasswordsService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services
   .AddEndpointsApiExplorer()
