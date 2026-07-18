@@ -16,19 +16,20 @@ string restClientFilename = "_requests.http";
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
-    Args = args
+    Args = args,
+    ContentRootPath = Directory.GetCurrentDirectory()
 });
 
-// WICHTIG: Das hier ist der entscheidende Schritt!
-// Wir löschen alle vom Builder automatisch hinzugefügten Konfigurationsquellen, 
-// die standardmäßig "reloadOnChange: true" haben könnten.
 builder.Configuration.Sources.Clear();
 
-// Jetzt fügen wir sie manuell hinzu, garantiert ohne File-Watching:
+
+string basePath = Directory.GetCurrentDirectory();
+builder.Configuration.SetBasePath(basePath);
+
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
-    .AddEnvironmentVariables(); // WICHTIG für Render, damit die Connection String Variable gelesen wird!
+    .AddEnvironmentVariables();
 
 #region -------------------------------------------- ConfigureServices
 builder.Services.AddControllers()
@@ -99,35 +100,13 @@ app.MapControllers();
 
 Console.WriteLine($"Ready for clients at {DateTime.Now:HH:mm:ss} ...");
 // Automatische Migration / Tabellenerstellung für PostgreSQL
+// Ersetze deinen bisherigen Datenbank-Erstellungs-Block damit:
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<DataContext>();
-
-        // 1. Stellt sicher, dass die DB existiert
-        context.Database.EnsureCreated();
-
-        // 2. Erstellt die Tabelle manuell per SQL, falls Supabase sie noch nicht hat
-        string createTableSql = @"
-            CREATE TABLE IF NOT EXISTS public.passwords (
-                id SERIAL PRIMARY KEY,
-                website TEXT NOT NULL,
-                username TEXT NOT NULL,
-                encryptedpassword TEXT NOT NULL
-            );";
-
-        using var command = context.Database.GetDbConnection().CreateCommand();
-        command.CommandText = createTableSql;
-        context.Database.OpenConnection();
-        command.ExecuteNonQuery();
-
-        Console.WriteLine("++++ Tabelle public.passwords erfolgreich geprüft/erstellt!");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"++++ Fehler bei automatischer Tabellenerstellung: {ex.Message}");
-    }
+    var context = services.GetRequiredService<DataContext>();
+    // Dies wendet alle ausstehenden Migrationen automatisch bei App-Start an
+    context.Database.Migrate();
+    Console.WriteLine("++++ Migrationen erfolgreich auf Datenbank angewendet!");
 }
 app.Run();
