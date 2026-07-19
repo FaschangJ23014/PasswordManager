@@ -27,6 +27,7 @@
   //Variablen fürs Login
   let username = $state('');
   let password = $state('');
+  let isRegistering = $state(false);
 
   //Für die Automatische Berechnung: Reaktiv
   let strength = $derived(calculateStrength(generatedPassword));
@@ -34,22 +35,29 @@
   const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
 
   //login
-  async function login() {
-  const response = await fetch('https://passwordmanager-k5za.onrender.com/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
+  async function handleAuth() {
+    const endpoint = isRegistering ? 'register' : 'login';
+    const response = await fetch(`https://passwordmanager-k5za.onrender.com/api/auth/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
 
-  if (response.ok) {
-    const data = await response.json();
-    localStorage.setItem('token', data.token);
-    isAuthenticated = true;
-    loadPasswords();
-  } else {
-    alert('Login fehlgeschlagen!');
+    if (response.ok) {
+      if (isRegistering) {
+        alert('Registrierung erfolgreich! Du kannst dich jetzt einloggen.');
+        isRegistering = false; // Zurück zum Login
+      } else {
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        isAuthenticated = true;
+        loadPasswords();
+      }
+    } else {
+      const err = await response.text();
+      alert(`${isRegistering ? 'Registrierung' : 'Login'} fehlgeschlagen: ${err}`);
+    }
   }
-}
 
 //Fürs Abmelden
 function logout() {
@@ -245,11 +253,20 @@ async function isPasswordPwned(password) {
 
   {#if !isAuthenticated}
     <div class="card login-box">
-    <h3>Login</h3>
-    <input type="text" placeholder="Username" bind:value={username} />
-    <input type="password" placeholder="Passwort" bind:value={password} />
-    <button onclick={login}>Einloggen</button>
-  </div>
+      <h3>{isRegistering ? 'Account erstellen' : 'Login'}</h3>
+      
+      <input type="text" placeholder="Username" bind:value={username} />
+      <input type="password" placeholder="Passwort" bind:value={password} />
+      
+      <button onclick={handleAuth}>
+        {isRegistering ? 'Registrieren' : 'Einloggen'}
+      </button>
+
+      <p style="margin-top: 15px; font-size: 0.85rem; cursor: pointer;" 
+         onclick={() => isRegistering = !isRegistering}>
+        {isRegistering ? 'Schon registriert? Hier einloggen.' : 'Noch keinen Account? Jetzt registrieren.'}
+      </p>
+    </div>
   {:else}
     
     <div class="dashboard">
