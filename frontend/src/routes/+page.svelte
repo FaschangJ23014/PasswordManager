@@ -29,6 +29,11 @@
   let password = $state('');
   let isRegistering = $state(false);
 
+  //Berechnetes Array für die Suche
+  let filteredPasswords = $derived(passwords.filter(p => 
+   (p.website ?? p.Website).toLowerCase().includes(searchQuery.toLowerCase())
+   ));
+
   //Für die Automatische Berechnung: Reaktiv
   let strength = $derived(calculateStrength(generatedPassword));
 
@@ -297,7 +302,7 @@ async function isPasswordPwned(password) {
     <p class="empty-msg">Keine Einträge gefunden.</p>
   {:else}
     <div class="password-list">
-      {#each passwords as entry}
+      {#each filteredPasswords as entry}
         <div class="entry-item" class:pwned={pwnedList.includes(entry.id ?? entry.Id)}>
           <div class="entry-info">
             <strong>{entry.website ?? entry.Website}</strong>
