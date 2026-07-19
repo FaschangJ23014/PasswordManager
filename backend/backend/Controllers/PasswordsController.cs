@@ -28,8 +28,13 @@ public class PasswordsController : ControllerBase
     [HttpPost]
     public ActionResult<PasswordEntry> Create([FromBody] PasswordEntry newEntry)
     {
-        newEntry.UserId = int.Parse(GetUserId()); // Weise dem Eintrag den aktuellen User zu
-        return Ok(_passwordsService.CreatePassword(newEntry));
+        string userIdString = GetUserId();
+        if (int.TryParse(userIdString, out int userId))
+        {
+            newEntry.UserId = userId;
+            return Ok(_passwordsService.CreatePassword(newEntry));
+        }
+        return BadRequest("Ungültige User-ID im Token.");
     }
 
     [HttpDelete("{id}")]
