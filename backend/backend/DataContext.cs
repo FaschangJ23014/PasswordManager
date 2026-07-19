@@ -22,5 +22,6 @@ public class DataContext : DbContext
         entity.Property(p => p.Website).HasColumnName("\"Website\"");
         entity.Property(p => p.Username).HasColumnName("\"Username\"");
         entity.Property(p => p.EncryptedPassword).HasColumnName("\"EncryptedPassword\"");
+        entity.Property(p => p.UserId).HasColumnName("\"UserId\"");
     }
 }

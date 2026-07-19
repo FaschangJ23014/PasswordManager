@@ -21,21 +21,21 @@ public class PasswordsController : ControllerBase
     public ActionResult<List<PasswordEntry>> GetAll([FromQuery] string? search = null)
     {
         // Übergib die UserId an den Service, damit nur die eigenen Daten geladen werden
-        var userId = GetUserId();
+        int userId = int.Parse(GetUserId());
         return Ok(_passwordsService.GetAllForUser(userId, search));
     }
 
     [HttpPost]
     public ActionResult<PasswordEntry> Create([FromBody] PasswordEntry newEntry)
     {
-        newEntry.UserId = GetUserId(); // Weise dem Eintrag den aktuellen User zu
+        newEntry.UserId = int.Parse(GetUserId()); // Weise dem Eintrag den aktuellen User zu
         return Ok(_passwordsService.CreatePassword(newEntry));
     }
 
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        var userId = GetUserId();
+        int userId = int.Parse(GetUserId());
         _passwordsService.DeleteForUser(id, userId); // Löschen nur wenn User-ID passt
         return Ok();
     }
