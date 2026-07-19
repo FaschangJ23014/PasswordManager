@@ -30,4 +30,12 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- NUR EINMALIG DIESE EINTRÄGE -->
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+
+		<!-- Das Update für SQLite, um die Sicherheitswarnung loszuwerden -->
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.12" />
+	</ItemGroup>
 </Project>
