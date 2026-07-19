@@ -37,13 +37,24 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto dto)
         {
+            // Hol den User
             var user = _context.Users.FirstOrDefault(u => u.Username == dto.Username);
-            if (user == null || !_authService.VerifyPassword(user, user.PasswordHash, dto.Password))
+
+            // Fehler-Logging (Schau in die Render-Logs, was hier ausgegeben wird!)
+            if (user == null)
+            {
+                Console.WriteLine("++++ Login: User nicht gefunden");
                 return Unauthorized("Ungültige Anmeldedaten.");
+            }
 
-            // 2. JWT erstellen
+            bool isValid = _authService.VerifyPassword(user, user.PasswordHash, dto.Password);
+            if (!isValid)
+            {
+                Console.WriteLine("++++ Login: Passwort falsch");
+                return Unauthorized("Ungültige Anmeldedaten.");
+            }
+
             var token = _authService.CreateToken(user);
-
             return Ok(new { Token = token });
         }
 
