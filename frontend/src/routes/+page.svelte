@@ -30,9 +30,16 @@
   let isRegistering = $state(false);
 
   //Berechnetes Array für die Suche
-  let filteredPasswords = $derived(passwords.filter(p => 
-   (p.website ?? p.Website).toLowerCase().includes(searchQuery.toLowerCase())
-   ));
+  let filteredPasswords = $derived.by(() => {
+  if (!passwords || passwords.length === 0) return [];
+  
+  const query = searchQuery.toLowerCase();
+  return passwords.filter(p => {
+    // Greife auf Website zu, egal ob 'website' oder 'Website' (wegen JSON-Konfiguration)
+    const website = (p.website ?? p.Website ?? "").toLowerCase();
+    return website.includes(query);
+  });
+});
 
   //Für die Automatische Berechnung: Reaktiv
   let strength = $derived(calculateStrength(generatedPassword));
@@ -296,7 +303,7 @@ async function isPasswordPwned(password) {
 
       <div class="card list-box">
   <h3>Deine Passwörter</h3>
-  <input type="text" placeholder="🔍 Nach Website suchen..." bind:value={searchQuery} oninput={handleSearch} />
+  <input type="text" placeholder="🔍 Nach Website suchen..." bind:value={searchQuery} />
 
   {#if passwords.length === 0}
     <p class="empty-msg">Keine Einträge gefunden.</p>
