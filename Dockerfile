@@ -13,6 +13,7 @@ RUN dotnet publish "backend/backend.csproj" 2>/dev/null -c Release -o /app/publi
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/publish .
+RUN apt-get update && apt-get install -y libgssapi-krb5-2 && rm -rf /var/lib/apt/lists/*
 
 # Port für Render öffnen
 EXPOSE 8080
