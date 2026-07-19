@@ -40,7 +40,7 @@ public class PasswordsController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Schickt den Fehler direkt ins Frontend, statt einfach nur 500 zu werfen
+
             return StatusCode(500, $"Fehler beim Speichern: {ex.Message} | Stack: {ex.StackTrace}");
         }
     }
