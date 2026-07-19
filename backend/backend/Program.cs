@@ -24,6 +24,7 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddScoped<PasswordsService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddAuthorization();
 
 // CORS-Policy
