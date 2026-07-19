@@ -37,25 +37,22 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto dto)
         {
-            // Hol den User
-            var user = _context.Users.FirstOrDefault(u => u.Username == dto.Username);
-
-            // Fehler-Logging (Schau in die Render-Logs, was hier ausgegeben wird!)
-            if (user == null)
+            try
             {
-                Console.WriteLine("++++ Login: User nicht gefunden");
-                return Unauthorized("Ungültige Anmeldedaten.");
-            }
+                var user = _context.Users.FirstOrDefault(u => u.Username == dto.Username);
+                if (user == null) return Unauthorized("User nicht gefunden.");
 
-            bool isValid = _authService.VerifyPassword(user, user.PasswordHash, dto.Password);
-            if (!isValid)
+                bool isValid = _authService.VerifyPassword(user, user.PasswordHash, dto.Password);
+                if (!isValid) return Unauthorized("Passwort falsch.");
+
+                var token = _authService.CreateToken(user);
+                return Ok(new { Token = token });
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("++++ Login: Passwort falsch");
-                return Unauthorized("Ungültige Anmeldedaten.");
+                // Das hier ist wichtig! Es schickt den Fehler an das Frontend zurück
+                return StatusCode(500, $"Interner Serverfehler: {ex.Message} | Stack: {ex.StackTrace}");
             }
-
-            var token = _authService.CreateToken(user);
-            return Ok(new { Token = token });
         }
 
 
