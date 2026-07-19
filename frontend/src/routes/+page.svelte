@@ -1,8 +1,15 @@
 <script>
   import { onMount } from 'svelte';
 
+  onMount(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    isAuthenticated = true;
+    loadPasswords();
+  }
+});
+
   // Svelte 5 Runes für Reaktivität
-  let masterPassword = $state('');
   let isAuthenticated = $state(false);
   let searchQuery = $state('');
   let debounceTimer;
@@ -17,35 +24,67 @@
   let newUsername = $state('');
   let generatedPassword = $state('');
 
+  //Variablen fürs Login
+  let username = $state('');
+  let password = $state('');
+
   //Für die Automatische Berechnung: Reaktiv
   let strength = $derived(calculateStrength(generatedPassword));
 
   const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
 
+  //login
+  async function login() {
+  const response = await fetch('https://passwordmanager-k5za.onrender.com/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    localStorage.setItem('token', data.token);
+    isAuthenticated = true;
+    loadPasswords();
+  } else {
+    alert('Login fehlgeschlagen!');
+  }
+}
+
+//Fürs Abmelden
+function logout() {
+  localStorage.removeItem('token');
+  isAuthenticated = false;
+  passwords = [];
+}
+
+
+  // Helper, um den Header zu bauen
+  function getHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+    };
+}
+
   // 1. Passwörter von der API laden
   async function loadPasswords() {
-    if (!masterPassword) return;
-    
     try {
-      const response = await fetch(`${API_URL}?search=${searchQuery}`, {
-        method: 'GET',
-        headers: {
-          // encodeURIComponent macht das Passwort Header-sicher!
-          'X-Master-Password': encodeURIComponent(masterPassword)
-        }
-      });
+    const response = await fetch(API_URL, {
+      method: 'GET',
+      headers: getHeaders() 
+    });
 
-      if (response.ok) {
-        passwords = await response.json();
-        isAuthenticated = true;
-      } else if (response.status === 401) {
-        alert('Falsches Master-Passwort! Zugriff verweigert.');
-        isAuthenticated = false;
-      }
-    } catch (error) {
-      console.error('Fehler beim Laden:', error);
+    if (response.ok) {
+      passwords = await response.json();
+      isAuthenticated = true;
+    } else {
+      isAuthenticated = false;
     }
-    console.log("Meine Passwörter:", passwords);
+  } catch (error) {
+    console.error('Fehler:', error);
+  }
   }
 
   // 2. Neues Passwort generieren
@@ -81,11 +120,7 @@
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Auch hier absichern:
-          'X-Master-Password': encodeURIComponent(masterPassword)
-        },
+        headers: getHeaders(),
         body: JSON.stringify(newEntry)
       });
 
@@ -129,9 +164,7 @@
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
-        headers: {
-          'X-Master-Password': masterPassword
-        }
+        headers: getHeaders()
       });
 
       if (response.ok) {
@@ -203,18 +236,20 @@ async function isPasswordPwned(password) {
 </script>
 
 <main class="container">
-  <h1>🛡️ ShieldVault</h1>
+  <div class="header">
+    <h1>🛡️ ShieldVault</h1>
+    {#if isAuthenticated}
+      <button class="btn-logout" onclick={logout}>Logout</button>
+    {/if}
+  </div>
 
   {#if !isAuthenticated}
     <div class="card login-box">
-      <h3>Guten Tag, Jakob. Bitte verifizieren:</h3>
-      <input 
-        type="password" 
-        placeholder="Dein Master-Passwort eingeben..." 
-        bind:value={masterPassword} 
-      />
-      <button onclick={loadPasswords}>Tresor öffnen</button>
-    </div>
+    <h3>Login</h3>
+    <input type="text" placeholder="Username" bind:value={username} />
+    <input type="password" placeholder="Passwort" bind:value={password} />
+    <button onclick={login}>Einloggen</button>
+  </div>
   {:else}
     
     <div class="dashboard">
@@ -273,6 +308,23 @@ async function isPasswordPwned(password) {
 </main>
 
 <style>
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-logout {
+  background-color: #475569; /* Ein dezentes Grau */
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.btn-logout:hover {
+  background-color: #ef4444; /* Wird beim Drüberfahren rot */
+}
 .button-group {
   display: flex;
   gap: 10px; /* Abstand zwischen den Buttons */

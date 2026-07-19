@@ -86,6 +86,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+
 #region -------------------------------------------- Middleware pipeline
 
 // WICHTIG: Die CORS-Middleware muss ganz am Anfang der Pipeline stehen!

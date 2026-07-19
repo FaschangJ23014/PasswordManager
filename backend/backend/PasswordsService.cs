@@ -26,14 +26,18 @@ public class PasswordsService
         return keyBytes;
     }
 
-    public List<PasswordEntry> GetAllPasswords()
+    public List<PasswordEntry> GetAllForUser(string userId, string? search)
     {
-        var entries = _context.Passwords.ToList();
+        var query = _context.Passwords.Where(p => p.UserId == userId);
 
-        foreach (var entry in entries)
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            entry.EncryptedPassword = Decrypt(entry.EncryptedPassword);
+            query = query.Where(p => p.Website.ToLower().Contains(search.ToLower()));
         }
+
+        var entries = query.ToList();
+        foreach (var entry in entries)
+            entry.EncryptedPassword = Decrypt(entry.EncryptedPassword);
 
         return entries;
     }
@@ -41,45 +45,19 @@ public class PasswordsService
     public PasswordEntry CreatePassword(PasswordEntry entry)
     {
         entry.EncryptedPassword = Encrypt(entry.EncryptedPassword);
-
         _context.Passwords.Add(entry);
         _context.SaveChanges();
-
         entry.EncryptedPassword = Decrypt(entry.EncryptedPassword);
         return entry;
     }
 
-    public List<PasswordEntry> SearchPasswords(string query)
+    public void DeleteForUser(int id, string userId)
     {
-        if (string.IsNullOrWhiteSpace(query))
-        {
-            return GetAllPasswords();
-        }
-
-        var filtered = _context.Passwords
-            .Where(p => p.Website.ToLower().Contains(query.ToLower()))
-            .ToList();
-
-        foreach (var entry in filtered)
-        {
-            entry.EncryptedPassword = Decrypt(entry.EncryptedPassword);
-        }
-
-        return filtered;
-    }
-
-    public void Delete(int id)
-    {
-        var password = _context.Passwords.FirstOrDefault(x =>  x.Id == id);
-
-        if(password == null)
-        {
-            throw new Exception("Object not found");
-        }
+        var password = _context.Passwords.FirstOrDefault(x => x.Id == id && x.UserId == userId);
+        if (password == null) throw new Exception("Eintrag nicht gefunden oder keine Berechtigung");
 
         _context.Passwords.Remove(password);
         _context.SaveChanges();
-
     }
 
     // --- AES VERSCHLÜSSELUNG LOGIK ---
