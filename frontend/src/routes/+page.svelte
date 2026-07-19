@@ -27,6 +27,7 @@
   //Variablen fürs Login
   let username = $state('');
   let password = $state('');
+  let isRegisterMode = $state(false);
 
   //Für die Automatische Berechnung: Reaktiv
   let strength = $derived(calculateStrength(generatedPassword));
@@ -50,6 +51,23 @@
     alert('Login fehlgeschlagen!');
   }
 }
+
+//Fürs Registrieren
+async function register() {
+    const response = await fetch('https://passwordmanager-k5za.onrender.com/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    if (response.ok) {
+      alert('Registrierung erfolgreich! Bitte logge dich jetzt ein.');
+      isRegisterMode = false; // Zurück zum Login
+    } else {
+      const err = await response.text();
+      alert('Registrierung fehlgeschlagen: ' + err);
+    }
+  }
 
 //Fürs Abmelden
 function logout() {
@@ -245,11 +263,26 @@ async function isPasswordPwned(password) {
 
   {#if !isAuthenticated}
     <div class="card login-box">
-    <h3>Login</h3>
-    <input type="text" placeholder="Username" bind:value={username} />
-    <input type="password" placeholder="Passwort" bind:value={password} />
-    <button onclick={login}>Einloggen</button>
-  </div>
+      <h3>{isRegisterMode ? 'Registrieren' : 'Login'}</h3>
+      <input type="text" placeholder="Username" bind:value={username} />
+      <input type="password" placeholder="Passwort" bind:value={password} />
+      
+      {#if !isRegisterMode}
+        <button onclick={login}>Einloggen</button>
+        <p style="margin-top: 15px; font-size: 0.8rem;">
+          Noch keinen Account? 
+          <button style="background:none; color:#38bdf8; text-decoration:underline; padding:0;" 
+                  onclick={() => isRegisterMode = true}>Hier registrieren</button>
+        </p>
+      {:else}
+        <button class="btn-success" onclick={register}>Account erstellen</button>
+        <p style="margin-top: 15px; font-size: 0.8rem;">
+          Schon einen Account? 
+          <button style="background:none; color:#38bdf8; text-decoration:underline; padding:0;" 
+                  onclick={() => isRegisterMode = false}>Zurück zum Login</button>
+        </p>
+      {/if}
+    </div>
   {:else}
     
     <div class="dashboard">
