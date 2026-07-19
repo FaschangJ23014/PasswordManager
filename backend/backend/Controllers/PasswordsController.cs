@@ -28,13 +28,21 @@ public class PasswordsController : ControllerBase
     [HttpPost]
     public ActionResult<PasswordEntry> Create([FromBody] PasswordEntry newEntry)
     {
-        string userIdString = GetUserId();
-        if (int.TryParse(userIdString, out int userId))
+        try
         {
-            newEntry.UserId = userId;
-            return Ok(_passwordsService.CreatePassword(newEntry));
+            string userIdString = GetUserId();
+            if (int.TryParse(userIdString, out int userId))
+            {
+                newEntry.UserId = userId;
+                return Ok(_passwordsService.CreatePassword(newEntry));
+            }
+            return BadRequest("Ungültige User-ID im Token.");
         }
-        return BadRequest("Ungültige User-ID im Token.");
+        catch (Exception ex)
+        {
+            // Schickt den Fehler direkt ins Frontend, statt einfach nur 500 zu werfen
+            return StatusCode(500, $"Fehler beim Speichern: {ex.Message} | Stack: {ex.StackTrace}");
+        }
     }
 
     [HttpDelete("{id}")]
