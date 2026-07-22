@@ -35,7 +35,6 @@
   
   const query = searchQuery.toLowerCase();
   return passwords.filter(p => {
-    // Greife auf Website zu, egal ob 'website' oder 'Website' (wegen JSON-Konfiguration)
     const website = (p.website ?? p.Website ?? "").toLowerCase();
     return website.includes(query);
   });

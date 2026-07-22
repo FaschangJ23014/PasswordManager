@@ -11,6 +11,8 @@ public class Users
 {
     [Key]
     public int Id { get; set; }
+
+    [Required]
     public string Username { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
     public List<PasswordEntry> PasswordEntries { get; set; } = new();

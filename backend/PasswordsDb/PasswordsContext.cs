@@ -14,6 +14,11 @@ public partial class PasswordsContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         OnModelCreatingPartial(modelBuilder);
+
+        //Username als eindeutig festlegen
+        modelBuilder.Entity<Users>()
+        .HasIndex(u => u.Username)
+        .IsUnique();
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
