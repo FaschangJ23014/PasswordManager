@@ -161,6 +161,8 @@
     padding: 15px 25px;
     border-radius: 16px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
   }
 
   .glass {
