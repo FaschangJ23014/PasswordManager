@@ -1,8 +1,17 @@
+<div align="center">
+
 # 🛡️ ShieldVault Password Manager
 
-A secure password manager application built with **.NET 8** and **Svelte**. This project focuses on encryption, data security, and a clean, responsive user experience.
+**A enterprise-grade, secure, and responsive full-stack password manager built with modern web technologies.**
 
-**Live Demo:** [https://password-manager-sigma-lemon.vercel.app/](https://password-manager-sigma-lemon.vercel.app/)
+[Live Demo](https://password-manager-sigma-lemon.vercel.app/) • [Backend API](https://passwordmanager-k5za.onrender.com)
+
+[![Frontend Deployment](https://img.shields.io/badge/Frontend-Vercel-black?style=flat-square&logo=vercel)](https://password-manager-sigma-lemon.vercel.app/)
+[![Backend Deployment](https://img.shields.io/badge/Backend-Render-46E3B7?style=flat-square&logo=render)](https://render.com)
+[![Tech Stack](https://img.shields.io/badge/Stack-.NET%208%20|%20Svelte-blue?style=flat-square)](https://github.com/FaschangJ23014/PasswordManager)
+[![Security](https://img.shields.io/badge/Security-AES--256%20|%20HIBP-success?style=flat-square)]()
+
+</div>
 
 ## 🚀 Features
 - **AES Encryption:** All passwords are encrypted at the backend before being stored in the database.
