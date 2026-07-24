@@ -103,7 +103,7 @@
 
 <main class="container">
   <div class="header">
-    <h1>🛡️ ShieldVault</h1>
+  
     {#if isAuthenticated}
       <button class="btn-logout" onclick={logout}>Logout</button>
     {/if}
@@ -112,6 +112,7 @@
   {#if !isAuthenticated}
     <Login onAuthSuccess={() => { isAuthenticated = true; loadPasswords(); }} />
   {:else}
+  <h1>🛡️ ShieldVault</h1>
     <div class="dashboard">
       <PasswordForm 
         {API_URL} 
