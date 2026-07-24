@@ -13,6 +13,21 @@
 
 </div>
 
+## 🛠️ Getting Started (Local Development)
+
+If you want to run or test the project locally, follow these steps:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/FaschangJ23014/PasswordManager.git
+2. **Backend:**
+   Navigate to the backend directory, configure your appsettings.json or environment variables  (including your ShieldSettings:EncryptionKey and connection string), and run: dotnet run
+
+3. **Frontend:**
+   Navigate to the frontend directory, install dependencies, and start the development server:
+   npm install,
+   npm run dev
+
 ## 🚀 Features
 - **AES Encryption:** All passwords are encrypted at the backend before being stored in the database.
 - **Master Password Protection:** Access to sensitive data is restricted and requires master password authentication.
@@ -36,3 +51,18 @@ This project was born out of personal necessity. After experiencing a data breac
 
 ---
 *Developed as a project to deepen knowledge in Web Security and Fullstack Development.*
+
+## 🏛️ System Architecture
+
+ShieldVault is structured as a decoupled full-stack application, ensuring secure data transport, robust server-side processing, and a high-performance frontend user experience.
+
+```mermaid
+graph TD
+User([User / Browser]) -->|HTTPS / JWT| Frontend[Svelte Frontend <br/> Vercel]
+Frontend -->|REST API / Bearer Token| Backend[ASP.NET Core API <br/> Render]
+Backend -->|Entity Framework Core| DB[(Supabase PostgreSQL)]
+Frontend -.->|K-Anonymity SHA-1 Check| HIBP[HaveIBeenPwned API]
+style Frontend fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#fff
+style Backend fill:#1e293b,stroke:#46E3B7,stroke-width:2px,color:#fff
+style DB fill:#1e293b,stroke:#a855f7,stroke-width:2px,color:#fff
+style HIBP fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fff 
