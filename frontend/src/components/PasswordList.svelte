@@ -252,6 +252,24 @@
     padding-right: 4px;
   }
 
+  .password-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .password-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+  }
+
+  .password-list::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.25);
+    border-radius: 4px;
+  }
+
+  .password-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(56, 189, 248, 0.5);
+  }
+
   .entry-item {
     display: flex;
     justify-content: space-between;
