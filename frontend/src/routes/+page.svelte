@@ -160,6 +160,26 @@
 </main>
 
 <style>
+.btn-settings {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-settings:hover {
+    background: rgba(56, 189, 248, 0.25);
+    color: white;
+    border-color: rgba(56, 189, 248, 0.5);
+  }
   :global(body) {
     background-color: #0f172a;
     color: #f8fafc;
