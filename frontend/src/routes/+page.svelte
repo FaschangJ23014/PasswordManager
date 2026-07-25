@@ -162,6 +162,12 @@
       {/if}
 </main>
 
+<footer class="app-footer">
+    <p>ShieldVault &copy; 2026 &bull; Entwickelt von <strong>Jakob Faschang</strong></p>
+    <p><a href="mailto:jfaschang@gmail.com">jfaschang@gmail.com</a></p>
+  </footer>
+
+
 <style>
 .header-actions {
     display: flex;
@@ -289,5 +295,33 @@
     .dashboard {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* Footer Style */
+  .app-footer {
+    text-align: center;
+    padding: 20px 0 10px 0;
+    color: #64748b;
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 20px;
+  }
+
+  .app-footer p {
+    margin: 4px 0;
+  }
+
+  .app-footer strong {
+    color: #94a3b8;
+  }
+
+  .app-footer a {
+    color: #38bdf8;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .app-footer a:hover {
+    text-decoration: underline;
   }
 </style>

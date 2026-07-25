@@ -5,7 +5,6 @@
   let password = $state('');
   let isRegistering = $state(false);
 
-  //Verbessert die UI
   let showPassword = $state(false);
   let isLoading = $state(false);
   let errorMessage = $state('');
@@ -58,92 +57,120 @@
   }
 </script>
 
-<div class="login-wrapper">
-  <div class="card glass">
-    <!-- Header / Branding -->
-    <div class="brand">
-      <div class="shield-icon">🛡️</div>
-      <h2>ShieldVault</h2>
-      <p class="subtitle">Dein sicherer Passwort-Tresor</p>
-    </div>
-
-    <!-- Segmented Tab Switcher -->
-    <div class="tabs">
-      <button 
-        class="tab-btn" 
-        class:active={!isRegistering} 
-        onclick={() => switchTab(false)}>
-        Einloggen
-      </button>
-      <button 
-        class="tab-btn" 
-        class:active={isRegistering} 
-        onclick={() => switchTab(true)}>
-        Registrieren
-      </button>
-    </div>
-
-    <!-- Inline Status-Nachrichten -->
-    {#if errorMessage}
-      <div class="alert error">⚠️ {errorMessage}</div>
-    {/if}
-    {#if successMessage}
-      <div class="alert success">✅ {successMessage}</div>
-    {/if}
-
-    <!-- Formular -->
-    <form onsubmit={(e) => { e.preventDefault(); handleAuth(); }}>
-      <div class="input-group">
-        <label for="username">Benutzername</label>
-        <div class="input-wrapper">
-          <span class="icon">👤</span>
-          <input 
-            id="username"
-            type="text" 
-            placeholder="z.B. max_mustermann" 
-            bind:value={username} 
-            autocomplete="username"
-          />
+<div class="login-container-wrapper">
+  <div class="login-wrapper">
+    <div class="card glass">
+      <!-- Header / Branding -->
+      <div class="brand">
+        <div class="shield-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
+        <h2>ShieldVault</h2>
+        <p class="subtitle">Dein sicherer Passwort-Tresor</p>
       </div>
 
-      <div class="input-group">
-        <label for="password">Passwort</label>
-        <div class="input-wrapper">
-          <span class="icon">🔑</span>
-          <input 
-            id="password"
-            type={showPassword ? 'text' : 'password'} 
-            placeholder="••••••••••••" 
-            bind:value={password}
-            autocomplete="current-password"
-          />
-          <button 
-            type="button" 
-            class="toggle-pwd" 
-            onclick={() => showPassword = !showPassword}>
-            {showPassword ? '👁️' : '🙈'}
-          </button>
-        </div>
+      <!-- Segmented Tab Switcher -->
+      <div class="tabs">
+        <button 
+          class="tab-btn" 
+          class:active={!isRegistering} 
+          onclick={() => switchTab(false)}>
+          Einloggen
+        </button>
+        <button 
+          class="tab-btn" 
+          class:active={isRegistering} 
+          onclick={() => switchTab(true)}>
+          Registrieren
+        </button>
       </div>
 
-      <button type="submit" class="btn-submit" disabled={isLoading}>
-        {#if isLoading}
-          <span class="spinner"></span> Laden...
-        {:else}
-          {isRegistering ? 'Account erstellen ✨' : 'Anmelden 🚀'}
-        {/if}
-      </button>
-    </form>
+      <!-- Inline Status-Nachrichten -->
+      {#if errorMessage}
+        <div class="alert error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {errorMessage}
+        </div>
+      {/if}
+      {#if successMessage}
+        <div class="alert success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          {successMessage}
+        </div>
+      {/if}
+
+      <!-- Formular -->
+      <form onsubmit={(e) => { e.preventDefault(); handleAuth(); }}>
+        <div class="input-group">
+          <label for="username">Benutzername</label>
+          <div class="input-wrapper">
+            <span class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input 
+              id="username"
+              type="text" 
+              placeholder="z.B. max_mustermann" 
+              bind:value={username} 
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Passwort</label>
+          <div class="input-wrapper">
+            <span class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input 
+              id="password"
+              type={showPassword ? 'text' : 'password'} 
+              placeholder="••••••••••••" 
+              bind:value={password}
+              autocomplete="current-password"
+            />
+            <button 
+              type="button" 
+              class="toggle-pwd" 
+              onclick={() => showPassword = !showPassword}>
+              {#if showPassword}
+                <!-- Auge offen -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              {:else}
+                <!-- Auge zu -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              {/if}
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" disabled={isLoading}>
+          {#if isLoading}
+            <span class="spinner"></span> Wird geladen...
+          {:else}
+            {isRegistering ? 'Account erstellen' : 'Anmelden'}
+          {/if}
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 
 <style>
+  .login-container-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 85vh;
+    justify-content: space-between;
+  }
+
   .login-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px 0;
+    flex: 1;
   }
 
   /* Glassmorphism Card Style */
@@ -166,9 +193,17 @@
   }
 
   .shield-icon {
-    font-size: 3rem;
-    margin-bottom: 5px;
-    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 12px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
   }
 
   h2 {
@@ -240,9 +275,10 @@
   .input-wrapper .icon {
     position: absolute;
     left: 14px;
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
     pointer-events: none;
-    opacity: 0.7;
   }
 
   input {
@@ -269,14 +305,15 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 1.1rem;
-    padding: 4px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
+    padding: 6px;
+    transition: color 0.2s;
   }
 
   .toggle-pwd:hover {
-    opacity: 1;
+    color: #38bdf8;
   }
 
   /* Submit Button */
@@ -316,6 +353,9 @@
     font-size: 0.85rem;
     margin-bottom: 18px;
     text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .alert.error {
