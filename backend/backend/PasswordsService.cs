@@ -7,7 +7,7 @@ public class PasswordsService
 {
     private readonly DataContext _context;
     private readonly string _encryptionKey;
-
+   
 
     public PasswordsService(DataContext context, IConfiguration configuration)
     {
@@ -30,7 +30,7 @@ public class PasswordsService
     public List<PasswordEntry> GetAllForUser(int userId, string? search)
     {
 
-        var query = _context.Passwords.Where(p => p.UserId == userId);
+        var query = _context.Passwords.AsNoTracking().Where(p => p.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search))
         {

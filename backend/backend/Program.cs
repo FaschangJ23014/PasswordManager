@@ -28,6 +28,32 @@ builder.Services.AddScoped<PasswordsService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserSettingsService>();
 
+//RATE LIMITING (Spam-Schutz)
+builder.Services.AddRateLimiter(options =>
+{
+    // Ein globales Limit für normale Endpunkte
+    options.GlobalLimiter = System.Threading.RateLimiting.PartitionedRateLimiter.Create<Microsoft.AspNetCore.Http.HttpContext, string>(httpContext =>
+        System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10, // Max 10 Anfragen...
+                Window = TimeSpan.FromSeconds(10), // ...pro 10 Sekunden
+                QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
+                QueueLimit = 2
+            }));
+
+    // Spezielles, strengeres Limit für den Login / Auth (gegen Brute-Force)
+    options.AddPolicy("AuthLimiter", httpContext =>
+        System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5, // Nur 5 Versuche...
+                Window = TimeSpan.FromMinutes(1) // ...pro Minute
+            }));
+});
+
 // --- AUTHENTICATION HINZUGEFÜGT ---
 builder.Services.AddAuthentication(options =>
 {
@@ -72,6 +98,7 @@ var app = builder.Build();
 #region -------------------------------------------- Middleware pipeline
 // WICHTIG: Die Reihenfolge ist hier entscheidend!
 app.UseCors(corsKey);
+app.UseRateLimiter();
 app.UseAuthentication(); // <-- HINZUGEFÜGT: Authentifizierung VOR Authorization
 app.UseAuthorization();  // <-- DIESE WAR SCHON DA
 
