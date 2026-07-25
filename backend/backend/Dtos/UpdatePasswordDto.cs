@@ -2,6 +2,6 @@
 
 public class UpdatePasswordDto
 {
-    public string OldPassword { get; set; } = string.Empty;
-    public string NewPassword { get; set; } = string.Empty;
+    public required string OldPassword { get; set; } 
+    public required string NewPassword { get; set; }
 }
