@@ -26,6 +26,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<PasswordsService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserSettingsService>();
 
 // --- AUTHENTICATION HINZUGEFÜGT ---
 builder.Services.AddAuthentication(options =>
