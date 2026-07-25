@@ -21,7 +21,7 @@
       const response = await fetch(`${API_URL.replace('/passwords', '/users/username')}`, {
         method: 'PUT',
         headers: getHeaders(),
-        body: JSON.stringify({ newUsername })
+        body: JSON.stringify({ username: newUsername })
       });
 
       const data = await response.json();
