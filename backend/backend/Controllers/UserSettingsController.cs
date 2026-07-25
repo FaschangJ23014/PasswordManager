@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace backend.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/users")]
 [ApiController]
 [Authorize]
 public class UserSettingsController : ControllerBase
