@@ -161,15 +161,15 @@
       </div>
 
       <div class="header-actions">
-      <button class="btn-logout" onclick={logout}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Abmelden
-      </button>
+        <button class="btn-logout" onclick={logout}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Abmelden
+        </button>
 
-      <button class="btn-settings" onclick={() => showSettings = true}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Settings
-      </button>
+        <button class="btn-settings" onclick={() => showSettings = true}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
       </div>
     </header>
   {/if}
@@ -216,98 +216,6 @@
 
 
 <style>
-
-/* --- Light Mode Anpassungen --- */
-
-:global(html.light-mode) :global(body) {
-  background-color: #f1f5f9 !important;
-  color: #0f172a !important;
-}
-
-/* Haupt-Container/Boxen (Formular & Tresor) im Light Mode hell machen */
-:global(html.light-mode) .glass,
-:global(html.light-mode) .dashboard > div,
-:global(html.light-mode) .app-header,
-:global(html.light-mode) .password-form,
-:global(html.light-mode) .password-list,
-:global(html.light-mode) form {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-  color: #0f172a !important;
-}
-
-/* Überschriften und Texte in den Boxen anpassen */
-:global(html.light-mode) h2, 
-:global(html.light-mode) h3, 
-:global(html.light-mode) h4, 
-:global(html.light-mode) span,
-:global(html.light-mode) label, 
-:global(html.light-mode) p {
-  color: #0f172a !important;
-}
-
-:global(html.light-mode) h1 {
-  background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%) !important;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Eingabefelder im Light Mode hell machen */
-:global(html.light-mode) input {
-  background: #f8fafc !important;
-  border: 1px solid #cbd5e1 !important;
-  color: #0f172a !important;
-}
-
-:global(html.light-mode) input::placeholder {
-  color: #94a3b8 !important;
-}
-
-/* Einzelne Passwort-Einträge im Tresor */
-:global(html.light-mode) .password-item,
-:global(html.light-mode) .vault-card {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #0f172a !important;
-}
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Abstand zwischen Abmelden und Settings-Button */
-}
-
-@media (max-width: 600px) {
-    .dashboard-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
-    }
-    
-    .header-actions {
-        justify-content: flex-end;
-    }
-}
-.btn-settings {
-    background: rgba(56, 189, 248, 0.15);
-    color: #38bdf8;
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    padding: 10px 16px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-  }
-
-  .btn-settings:hover {
-    background: rgba(56, 189, 248, 0.25);
-    color: white;
-    border-color: rgba(56, 189, 248, 0.5);
-  }
   :global(body) {
     background-color: #0f172a;
     color: #f8fafc;
@@ -320,6 +228,12 @@
   :global(html.light-mode) :global(body) {
     background-color: #f1f5f9 !important;
     color: #0f172a !important;
+  }
+
+  :global(html.light-mode) h1 {
+    background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%) !important;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .container {
@@ -344,6 +258,14 @@
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  :global(html.light-mode) .glass,
+  :global(html.light-mode) .app-header {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    color: #0f172a !important;
   }
 
   .logo-area {
@@ -371,6 +293,18 @@
     letter-spacing: 0.5px;
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .header-actions {
+      justify-content: flex-end;
+    }
+  }
+
   .btn-logout {
     background: rgba(239, 68, 68, 0.15);
     color: #fca5a5;
@@ -390,6 +324,27 @@
     background: rgba(239, 68, 68, 0.25);
     color: white;
     border-color: rgba(239, 68, 68, 0.5);
+  }
+
+  .btn-settings {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-settings:hover {
+    background: rgba(56, 189, 248, 0.25);
+    color: white;
+    border-color: rgba(56, 189, 248, 0.5);
   }
 
   .dashboard {
