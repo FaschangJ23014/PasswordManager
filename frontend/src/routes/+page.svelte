@@ -256,6 +256,14 @@
     border: 1px solid rgba(0, 0, 0, 0.06) !important;
   }
 
+  /* Innenabstand für Formulare und Boxen anpassen, damit Labels Luft haben */
+  :global(html.light-mode) :global(.password-form),
+  :global(html.light-mode) :global(.password-list),
+  :global(html.light-mode) :global(.dashboard > div),
+  :global(html.light-mode) :global(form) {
+    padding: 24px !important;
+  }
+
   .container {
     max-width: 1000px;
     margin: 0 auto;
