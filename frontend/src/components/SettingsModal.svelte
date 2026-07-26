@@ -1,5 +1,5 @@
 <script>
-  let { API_URL, getHeaders, onClose, onUsernameUpdated } = $props();
+  let { API_URL, getHeaders, onClose, onUsernameUpdated, isDarkMode, toggleTheme } = $props();
 
   let newUsername = $state('');
   let oldPassword = $state('');
@@ -114,12 +114,108 @@
           {/if}
         </form>
       </section>
+
+       <hr class="settings-divider" />
+
+<div class="setting-row">
+  <span>Dark / Light Mode</span>
+  
+  <!-- Der Schalter -->
+  <label class="switch">
+    <input type="checkbox" checked={isDarkMode} onchange={toggleTheme} />
+    <span class="slider">
+      <span class="slider-text">{isDarkMode ? 'ON' : 'OFF'}</span>
+    </span>
+  </label>
+</div>
+
     </div>
 
+
+   
   </div>
 </div>
 
 <style>
+.settings-divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 20px 0;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* --- Neumorphism Toggle Switch --- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 70px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 34px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+/* Der runde Kreis */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 3px;
+  background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Text (ON / OFF) im Schalter */
+.slider-text {
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-left: auto;
+  transition: 0.3s;
+}
+
+/* Wenn Schalter AN ist */
+input:checked + .slider {
+  background-color: #0284c7; /* Schönes Blau beim Einschalten */
+}
+
+input:checked + .slider:before {
+  transform: translateX(36px);
+}
+
+input:checked + .slider .slider-text {
+  color: white;
+  margin-left: 8px;
+  margin-right: auto;
+}
   .modal-backdrop {
     position: fixed;
     top: 0;

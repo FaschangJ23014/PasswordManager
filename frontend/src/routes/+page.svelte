@@ -8,6 +8,7 @@
   let isAuthenticated = $state(false);
   let showSettings = $state(false);
   let passwords = $state([]);
+  let isDarkMode = $state(true);
 
   //Auto-Logout Variablen
   let inactivityTimer;
@@ -41,6 +42,16 @@
     };
   });
 
+
+  //Dark-LightMode Methode
+  function toggleTheme() {
+  isDarkMode = !isDarkMode;
+  if (isDarkMode) {
+    document.documentElement.classList.remove('light-mode');
+  } else {
+    document.documentElement.classList.add('light-mode');
+  }
+}
 
   //Auto-Logout Methode
   function resetInactivityTimer() {
@@ -190,6 +201,8 @@
       <SettingsModal 
        {API_URL} 
        {getHeaders} 
+       {isDarkMode}
+       {toggleTheme}
        onClose={() => showSettings = false} 
        onUsernameUpdated={(newVal) => {  currentUsername = newVal; }}
          />
@@ -203,6 +216,17 @@
 
 
 <style>
+
+:global(html.light-mode) :global(body) {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+:global(html.light-mode) .glass {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
 .header-actions {
     display: flex;
     align-items: center;
@@ -246,6 +270,12 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  :global(html.light-mode) :global(body) {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
   }
 
   .container {
