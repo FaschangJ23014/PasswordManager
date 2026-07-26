@@ -217,15 +217,49 @@
 
 <style>
 
+/* --- Light Mode Anpassungen --- */
+
 :global(html.light-mode) :global(body) {
   background-color: #f1f5f9 !important;
   color: #0f172a !important;
 }
 
-:global(html.light-mode) .glass {
-  background: rgba(255, 255, 255, 0.85) !important;
+/* Haupt-Container/Boxen (Formular & Tresor) im Light Mode hell machen */
+:global(html.light-mode) .glass,
+:global(html.light-mode) .dashboard > div,
+:global(html.light-mode) .app-header {
+  background: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+/* Überschriften und Texte in den Boxen anpassen */
+:global(html.light-mode) h1, 
+:global(html.light-mode) h2, 
+:global(html.light-mode) h3, 
+:global(html.light-mode) h4, 
+:global(html.light-mode) span,
+:global(html.light-mode) label {
+  color: #0f172a !important;
+}
+
+/* Eingabefelder im Light Mode hell machen */
+:global(html.light-mode) input {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global(html.light-mode) input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Einzelne Passwort-Einträge im Tresor */
+:global(html.light-mode) .password-item,
+:global(html.light-mode) .vault-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
 }
 .header-actions {
     display: flex;
