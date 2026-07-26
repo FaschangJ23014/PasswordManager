@@ -304,6 +304,35 @@
     color: #0f172a !important;
   }
 
+
+  /* Light Mode für das SettingsModal und Dialoge */
+  :global(html.light-mode) :global(.settings-modal),
+  :global(html.light-mode) :global(.modal),
+  :global(html.light-mode) :global(.modal-content) {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Light Mode für Passwort-Einträge und Badges */
+  :global(html.light-mode) :global(.password-item),
+  :global(html.light-mode) :global(.vault-item),
+  :global(html.light-mode) :global([class*="item"]),
+  :global(html.light-mode) :global([class*="card"]) {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+  }
+
+  /* Badge "2 Einträge" im Light Mode lesbar machen */
+  :global(html.light-mode) :global(.badge),
+  :global(html.light-mode) :global([class*="count"]),
+  :global(html.light-mode) :global([class*="badge"]) {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+  }
+
   .logo-area {
     display: flex;
     align-items: center;
