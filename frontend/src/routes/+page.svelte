@@ -230,7 +230,7 @@
     color: #0f172a !important;
   }
 
-  /* Korrektur für die Überschrift im Light Mode (damit sie wieder gut sichtbar ist) */
+  /* Überschrift im Light Mode sichtbar machen */
   :global(html.light-mode) h1 {
     background: none !important;
     color: #0f172a !important;
@@ -262,11 +262,12 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
-  /* Light Mode Anpassungen für alle Boxen und Formulare */
+  /* Light Mode für Header, Formulare, Tresor-Container und Komponenten */
   :global(html.light-mode) .glass,
   :global(html.light-mode) .app-header,
   :global(html.light-mode) :global(.password-form),
   :global(html.light-mode) :global(.password-list),
+  :global(html.light-mode) :global(.dashboard > div),
   :global(html.light-mode) :global(form) {
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
@@ -274,7 +275,7 @@
     color: #0f172a !important;
   }
 
-  /* Texte und Labels im Light Mode anpassen */
+  /* Allgemeine Texte, Labels und Überschriften in den Boxen */
   :global(html.light-mode) :global(h2),
   :global(html.light-mode) :global(h3),
   :global(html.light-mode) :global(h4),
@@ -284,7 +285,7 @@
     color: #0f172a !important;
   }
 
-  /* Eingabefelder im Light Mode hell machen */
+  /* Eingabefelder im Light Mode */
   :global(html.light-mode) :global(input) {
     background: #f8fafc !important;
     border: 1px solid #cbd5e1 !important;
@@ -295,11 +296,12 @@
     color: #94a3b8 !important;
   }
 
-  /* Einzelne Passwort-Einträge im Tresor für Light Mode */
+  /* Einzelne Passwort-Karten im Tresor für den Light Mode */
   :global(html.light-mode) :global(.password-item),
   :global(html.light-mode) :global(.vault-card) {
     background: #f8fafc !important;
     border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
   }
 
   .logo-area {
