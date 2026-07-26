@@ -230,10 +230,12 @@
     color: #0f172a !important;
   }
 
+  /* Korrektur für die Überschrift im Light Mode (damit sie wieder gut sichtbar ist) */
   :global(html.light-mode) h1 {
-    background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%) !important;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none !important;
+    color: #0f172a !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: initial !important;
   }
 
   .container {
@@ -260,12 +262,44 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
+  /* Light Mode Anpassungen für alle Boxen und Formulare */
   :global(html.light-mode) .glass,
-  :global(html.light-mode) .app-header {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  :global(html.light-mode) .app-header,
+  :global(html.light-mode) :global(.password-form),
+  :global(html.light-mode) :global(.password-list),
+  :global(html.light-mode) :global(form) {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
     color: #0f172a !important;
+  }
+
+  /* Texte und Labels im Light Mode anpassen */
+  :global(html.light-mode) :global(h2),
+  :global(html.light-mode) :global(h3),
+  :global(html.light-mode) :global(h4),
+  :global(html.light-mode) :global(span),
+  :global(html.light-mode) :global(label),
+  :global(html.light-mode) :global(p) {
+    color: #0f172a !important;
+  }
+
+  /* Eingabefelder im Light Mode hell machen */
+  :global(html.light-mode) :global(input) {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+  }
+
+  :global(html.light-mode) :global(input::placeholder) {
+    color: #94a3b8 !important;
+  }
+
+  /* Einzelne Passwort-Einträge im Tresor für Light Mode */
+  :global(html.light-mode) :global(.password-item),
+  :global(html.light-mode) :global(.vault-card) {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
   }
 
   .logo-area {
