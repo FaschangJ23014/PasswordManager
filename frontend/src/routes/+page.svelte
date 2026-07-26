@@ -227,7 +227,10 @@
 /* Haupt-Container/Boxen (Formular & Tresor) im Light Mode hell machen */
 :global(html.light-mode) .glass,
 :global(html.light-mode) .dashboard > div,
-:global(html.light-mode) .app-header {
+:global(html.light-mode) .app-header,
+:global(html.light-mode) .password-form,
+:global(html.light-mode) .password-list,
+:global(html.light-mode) form {
   background: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
@@ -235,13 +238,19 @@
 }
 
 /* Überschriften und Texte in den Boxen anpassen */
-:global(html.light-mode) h1, 
 :global(html.light-mode) h2, 
 :global(html.light-mode) h3, 
 :global(html.light-mode) h4, 
 :global(html.light-mode) span,
-:global(html.light-mode) label {
+:global(html.light-mode) label, 
+:global(html.light-mode) p {
   color: #0f172a !important;
+}
+
+:global(html.light-mode) h1 {
+  background: linear-gradient(135deg, #0f172a 0%, #0284c7 100%) !important;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Eingabefelder im Light Mode hell machen */
@@ -260,6 +269,7 @@
 :global(html.light-mode) .vault-card {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
 }
 .header-actions {
     display: flex;
