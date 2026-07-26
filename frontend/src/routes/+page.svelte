@@ -9,6 +9,10 @@
   let showSettings = $state(false);
   let passwords = $state([]);
 
+  //Auto-Logout Variablen
+  let inactivityTimer;
+  const INACTIVITY_LIMIT = 5 * 60 * 1000;
+
   let currentUsername = $state('');
 
   const API_URL = 'https://passwordmanager-k5za.onrender.com/api/passwords';
@@ -19,7 +23,37 @@
       isAuthenticated = true;
       loadPasswords();
     }
+
+    //Auto-Logout Logik
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    
+    resetInactivityTimer();
+
+    events.forEach(event => {
+      window.addEventListener(event, resetInactivityTimer);
+    });
+
+    return () => {
+      clearTimeout(inactivityTimer);
+      events.forEach(event => {
+        window.removeEventListener(event, resetInactivityTimer);
+      });
+    };
   });
+
+
+  //Auto-Logout Methode
+  function resetInactivityTimer() {
+    if (!isAuthenticated) return;
+
+    clearTimeout(inactivityTimer);
+    
+    inactivityTimer = setTimeout(() => {
+      alert('Du wurdest wegen Inaktivität automatisch abgemeldet.');
+      logout(); 
+    }, INACTIVITY_LIMIT);
+  }
+
 
   function getHeaders() {
     const token = localStorage.getItem('token');
