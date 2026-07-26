@@ -238,6 +238,24 @@
     -webkit-text-fill-color: initial !important;
   }
 
+  /* Weichere Ecken für die Hauptboxen im Light Mode */
+  :global(html.light-mode) :global(.glass),
+  :global(html.light-mode) :global(.app-header),
+  :global(html.light-mode) :global(.password-form),
+  :global(html.light-mode) :global(.password-list),
+  :global(html.light-mode) :global(.dashboard > div),
+  :global(html.light-mode) :global(form) {
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important; /* Dezenter, weicher Rand */
+  }
+
+  /* Auch die einzelnen Passwort-Einträge abrunden */
+  :global(html.light-mode) :global(.password-item),
+  :global(html.light-mode) :global(.vault-card) {
+    border-radius: 12px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  }
+
   .container {
     max-width: 1000px;
     margin: 0 auto;
