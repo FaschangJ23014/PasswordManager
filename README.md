@@ -30,7 +30,7 @@ If you want to run or test the project locally, follow these steps:
 
 ## 🚀 Features
 - **AES Encryption:** All passwords are encrypted at the backend before being stored in the database.
-- **Master Password Protection:** Access to sensitive data is restricted and requires master password authentication.
+- **User Authentication & Personalized Views:** Secure login system ensuring users only see and manage their own data (Hashing included).
 - **Secure Architecture:** No sensitive data in the repository; uses environment variables for configuration.
 - **Responsive UI:** Modern interface built with Svelte, fully responsive for desktop and mobile devices.
 
@@ -45,6 +45,8 @@ This project was developed with a strong focus on security best practices:
 * **No Hardcoded Secrets:** All API keys and database credentials are managed via Environment Variables.
 * **SQL Injection Protection:** Utilizes EF Core for parameterised queries to prevent SQL injection attacks.
 * **Encryption:** AES-256 encryption ensures data remains unreadable even if the database is compromised.
+* **Token-Based Authentication:** Uses stateless tokens (JWT) to secure API endpoints and authenticate users safely.
+* **Secure Password Hashing:** User passwords are never stored in plain text, but securely hashed (using ASP.NET Identity).
 
 ## 💡 Motivation
 This project was born out of personal necessity. After experiencing a data breach on a website where I had reused my credentials, I realized how critical it is to manage passwords properly. I built ShieldVault to take control of my digital security, stop password reuse, and learn how to implement robust encryption in a real-world application.
