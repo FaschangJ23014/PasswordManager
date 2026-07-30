@@ -69,10 +69,15 @@ public class PasswordsService
 
         using Aes aes = Aes.Create();
         aes.Key = GetSecureKeyBytes(); // <-- Nutzt jetzt die sichere 32-Byte Methode!
-        aes.IV = new byte[16];
 
-        using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+        aes.GenerateIV();
+        byte[] iv = aes.IV;
+
+        using var encryptor = aes.CreateEncryptor(aes.Key, iv);
         using var ms = new MemoryStream();
+
+        ms.Write(iv, 0, iv.Length);
+
         using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
         {
             using (var sw = new StreamWriter(cs))
@@ -90,22 +95,24 @@ public class PasswordsService
 
         try
         {
-            // 1. Prüfen, ob es überhaupt valides Base64 sein kann
-            Span<byte> buffer = new Span<byte>(new byte[cipherText.Length]);
-            if (!Convert.TryFromBase64String(cipherText, buffer, out int bytesWritten))
-            {
-                return "[Unverschlüsselter Alt-Eintrag]";
-            }
+            // 1. Den Base64-Salat wieder in rohe Bytes zurückverwandeln
+            byte[] fullCipher = Convert.FromBase64String(cipherText);
 
             using Aes aes = Aes.Create();
             aes.Key = GetSecureKeyBytes();
-            aes.IV = new byte[16];
 
+            // 2. DEN IV WIEDERHERSTELLEN: 
+            byte[] iv = new byte[16];
+            Array.Copy(fullCipher, 0, iv, 0, 16);
+            aes.IV = iv;
+
+            // 3. Der restliche Text nach den ersten 16 Bytes ist der echte verschlüsselte Inhalt
+            using var ms = new MemoryStream(fullCipher, 16, fullCipher.Length - 16);
             using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            using var ms = new MemoryStream(Convert.FromBase64String(cipherText));
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
             using var sr = new StreamReader(cs);
 
+            // 4. Klartext auslesen und zurückgeben
             return sr.ReadToEnd();
         }
         catch (Exception ex)
