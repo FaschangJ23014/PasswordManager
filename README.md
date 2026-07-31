@@ -13,6 +13,14 @@
 
 </div>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/FaschangJ23014/PasswordManager//LoginSite.png" alt="ShieldVault Login" width="48%">
+  &nbsp; &nbsp;
+  <img src="https://raw.githubusercontent.com/FaschangJ23014/PasswordManager/DashboardSite.png" alt="ShieldVault Dashboard" width="48%">
+</p>
+
+<br>
+
 ## 🛠️ Getting Started (Local Development)
 
 If you want to run or test the project locally, follow these steps:
