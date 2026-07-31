@@ -14,10 +14,11 @@
 </div>
 
 ## Screenshots
-
-![Login Overview](screenshots/LoginSite.png)
-![Dashboard Overview](screenshots/DashboardSite.png)
-<br>
+<p align="center">
+  <img src="screenshots/LoginSite.png" alt="Login Overview" width="600">
+  <br><br>
+  <img src="screenshots/DashboardSite.png" alt="Dashboard Overview" width="600">
+</p>
 
 ## 🛠️ Getting Started (Local Development)
 
