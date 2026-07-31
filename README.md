@@ -13,12 +13,10 @@
 
 </div>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/FaschangJ23014/PasswordManager//LoginSite.png" alt="ShieldVault Login" width="48%">
-  &nbsp; &nbsp;
-  <img src="https://raw.githubusercontent.com/FaschangJ23014/PasswordManager/DashboardSite.png" alt="ShieldVault Dashboard" width="48%">
-</p>
+## Screenshots
 
+![Login Overview](screenshots/LoginSite.png)
+![Dashboard Overview](screenshots/DashboardSite.png)
 <br>
 
 ## 🛠️ Getting Started (Local Development)
